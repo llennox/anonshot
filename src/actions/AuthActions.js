@@ -1,0 +1,224 @@
+import axios from 'axios';
+import { AsyncStorage } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { USERNAME_CHANGED,
+  PASSWORD_CHANGED,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAIL,
+  LOADING,
+  SET_AUTH,
+  REFRESHING,
+  INITIAL_PHOTOS,
+  REFRESHING_FALSE,
+  ISANON,
+  UPDATE_ERROR,
+  UPDATE_LOGIN_ERROR,
+  ONCE_LOADED,
+  LG_USERNAME_CHANGED,
+  LG_PASSWORD_CHANGED
+} from './types';
+import { getPhotosWithAction, getPhotos, grabSinglePhoto } from './PhotoActions';
+
+export const usernameChanged = (text) => {
+    return {
+     type: USERNAME_CHANGED,
+     payload: text
+    };
+};
+
+export const lgusernameChanged = (text) => {
+    return {
+     type: USERNAME_CHANGED,
+     payload: text
+    };
+};
+
+export const isanonSwitch = (uuid, token) => {
+  return (dispatch) => {
+    axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+    axios.post('https://anonshot.com/api/isanonSwitch/', {
+      user_uuid: uuid
+    })
+    .then(function (response) {
+      console.log(response.data);
+      dispatch({ type: ISANON, payload: response.data });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const setRefreshingSingle = (bool, uuid, token) => {
+  return (dispatch) => {
+    if (bool === true) {
+    dispatch({ type: REFRESHING });
+    dispatch({ type: LOADING });
+    grabSinglePhoto(dispatch, uuid, token);
+}
+   dispatch({ type: REFRESHING_FALSE });
+};
+};
+
+export const setRefreshing = (bool, token) => {
+  return (dispatch) => {
+    if (bool === true) {
+    dispatch({ type: INITIAL_PHOTOS });
+    dispatch({ type: REFRESHING });
+    dispatch({ type: LOADING });
+    getPhotos(dispatch, token, 1);
+}
+   dispatch({ type: REFRESHING_FALSE });
+};
+};
+
+export const passwordChanged = (text) => {
+    return {
+     type: PASSWORD_CHANGED,
+     payload: text
+    };
+};
+
+export const lgpasswordChanged = (text) => {
+    return {
+     type: PASSWORD_CHANGED,
+     payload: text
+    };
+};
+
+export const updateLogInError = (message) => {
+  return (dispatch) => {
+    dispatch({ type: UPDATE_LOGIN_ERROR, payload: message })
+  }
+}
+
+export const updateError = (message) => {
+  return (dispatch) => {
+    dispatch({ type: UPDATE_ERROR, payload: message })
+  }
+}
+
+export const CreateAccount = (username, email, password, token) => {
+    return (dispatch) => {
+      dispatch({ type: LOADING });
+      console.log(password);
+      axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+      //const url = 'https://httpbin.org/post'
+      const url = 'https://anonshot.com/api/change-username/';
+      axios.post(url, {
+        isanon: 'False',
+        newusername: username,
+        newpassword: password,
+        newemail: email
+      }).then(function (response) {
+        const token = response.data.token;
+        console.log(response);
+        AsyncStorage.setItem('user_uuid', response.data.user_uuid);
+        AsyncStorage.setItem('username', response.data.username);
+        AsyncStorage.setItem('authtoken', token);
+        AsyncStorage.setItem('created', response.data.created.toString());
+
+        dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+        getPhotosWithAction(dispatch, token, 1);
+      })
+      .catch(function (error) {
+        dispatch({ type: UPDATE_ERROR, payload: 'username or email already taken' });
+        console.log(error.message);
+      });
+    }
+}
+
+
+export const logInUser = ( username, password, token ) => {
+
+  return (dispatch) => {
+    dispatch({ type: LOADING });
+    axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+    const url = 'https://anonshot.com/api/login/';
+    //const url = 'https://httpbin.org/post';
+    axios.post(url, {
+      username: username,
+      password: password
+    })
+    .then(function (response) {
+      const token = response.data.token;
+      AsyncStorage.setItem('user_uuid', response.data.user_uuid);
+      AsyncStorage.setItem('username', response.data.username);
+      AsyncStorage.setItem('authtoken', response.data.token);
+      AsyncStorage.setItem('created', response.data.created.toString());
+      dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+      getPhotosWithAction(dispatch, token, 1);
+    })
+    .catch(function (error) {
+      console.log(error);
+      dispatch({ type: UPDATE_LOGIN_ERROR, payload: 'username or password incorrect' });
+    });
+  };
+};
+
+//create another function that returns photo main view with api request
+//call createUser() then getPhotos() in initialView else statement just
+//getPhotos() in if block
+export const createUser = (dispatch) => {
+  console.log('create user');
+  console.log(dispatch);
+  axios.defaults.headers.common['Authorization'] = '';
+  const url = 'https://anonshot.com/api/create-user/';
+  //const url = 'https://httpbin.org/post'
+  axios.post(url).then(function (response) {
+    const token = response.data.token;
+    console.log(response.data);
+    AsyncStorage.setItem('user_uuid', response.data.user_uuid);
+    AsyncStorage.setItem('username', response.data.username);
+    AsyncStorage.setItem('authtoken', token);
+    AsyncStorage.setItem('created', response.data.created.toString());
+    dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+    getPhotosWithAction(dispatch, token, 1);
+  }).catch(function (error) {
+    console.log(error);
+  });
+};
+
+
+export const initialView = () => {
+  return (dispatch) => {
+    console.log('initialview');
+    dispatch({ type: LOADING });
+    dispatch({ type: ONCE_LOADED });
+    return AsyncStorage.multiGet(['authtoken', 'user_uuid', 'created', 'username'])
+     .then((item) => {
+     if (item[0][1] != null && item[1][1] != null && item[2][1] != null && item[3][1] != null) {
+       console.log(item);
+       dispatch({ type: SET_AUTH, payload: item });
+       getPhotos(dispatch, item[0][1], 1);
+     } else {
+       console.log('dis');
+       createUser(dispatch);
+       //send post to create account
+     }
+  });
+ };
+};
+
+export const logOutUser = (token) => {
+  return (dispatch) => {
+      dispatch({ type: LOADING });
+      axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+      const url = 'https://anonshot.com/api/auth/logout/';
+      //const url = 'https://httpbin.org/post'
+      axios.post(url).then(function () {
+        AsyncStorage.removeItem('user_uuid');
+        AsyncStorage.removeItem('username');
+        AsyncStorage.removeItem('authtoken');
+        AsyncStorage.removeItem('created');
+        createUser(dispatch);
+      }).catch(function (error) {
+        AsyncStorage.removeItem('user_uuid');
+        AsyncStorage.removeItem('username');
+        AsyncStorage.removeItem('authtoken');
+        AsyncStorage.removeItem('created');
+        createUser(dispatch);
+      });
+
+  };
+};
