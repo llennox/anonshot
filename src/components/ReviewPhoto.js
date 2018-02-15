@@ -159,6 +159,8 @@ class ReviewPhoto extends Component {
           Post Photo/Video
           </Text>
         </Button>
+    <View style={{ marginTop: 5 }} />
+        {this.renderPopButton()}
     </View>
   );
 }
@@ -168,8 +170,6 @@ render() {
  return (
   <ScrollView>
    {this.renderMainView()}
-   <View style={{ marginTop: 5 }} />
-   {this.renderPopButton()}
   </ScrollView>
 );
 }

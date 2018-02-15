@@ -103,7 +103,7 @@ renderComment(items) {
         onPress={() => this.getUserPhotos(items.poster)}
       >
         <Text style={styles.notanonTextStyle} >{items.poster}: <Text style={styles.captionTextStyle}> { items.comments }</Text></Text>
-          </TouchableOpacity>
+      </TouchableOpacity>
 
         <Text style={styles.timeTextStyle}>
         <Moment element={Text} fromNow>{items.timestamp}</Moment>
@@ -113,13 +113,12 @@ renderComment(items) {
     );
   }
    return (
-
-<View>
-<Text style={styles.captionTextStyle}>{items.poster}: { items.comments }</Text>
-<Text style={styles.timeTextStyle}>
-<Moment element={Text} fromNow>{items.timestamp}</Moment>
-</Text>
-</View>
+     <View>
+      <Text style={styles.captionTextStyle}>{items.poster}: { items.comments }</Text>
+      <Text style={styles.timeTextStyle}>
+      <Moment element={Text} fromNow>{items.timestamp}</Moment>
+      </Text>
+     </View>
 
   );
 };
@@ -195,12 +194,14 @@ renderCaption(x) {
     }
 
     return (
+      <View>
       <FastImage
        style={{ width: deviceWidth, height: deviceHeight / 1.4 }}
        source={{ uri: `https://anonshot.com/photos/${x.uuid}.jpg`,
                priority: FastImage.priority.normal, }}
 
       />
+      </View>
     );
   }
 
