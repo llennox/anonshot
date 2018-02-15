@@ -38,11 +38,13 @@ const RouterComponent = () => {
         component={ReviewPhoto}
         navigationBarStyle={{ backgroundColor: 'transparent',
         borderBottomColor: 'transparent' }}
+        renderBackButton={()=>(null)}
        />
        <Scene
         key='login'
         component={LoginForm}
         title="UmbreCam"
+        renderBackButton={()=>(null)}
        />
        <Scene
         style={{ paddingTop: 5 }}

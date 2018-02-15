@@ -19,7 +19,8 @@ import { usernameChanged,
   logOutUser,
   updateError,
   updateLogInError,
-  getPhotosByUser
+  getPhotosByUser,
+  popToHome
  } from '../actions';
 import { Button, Card, CardSection, Input } from './common';
 
@@ -73,6 +74,10 @@ class LoginForm extends Component {
         this.props.lgpasswordChanged(text);
     }
 
+    onPopButton() {
+      this.props.popToHome();
+    }
+
     logInButtonPress() {
       this.props.logInUser( this.props.lgusername, this.props.lgpassword, this.props.authtoken );
     }
@@ -84,7 +89,7 @@ class LoginForm extends Component {
     renderButton() {
       return (
         <Button style={styles.errorTextStyle} onPress={this.logInButtonPress.bind(this)} >
-           <Text>log in</Text>
+           <Text style={styles.notanonTextStyle}>log in</Text>
         </Button>
       );
     }
@@ -100,8 +105,18 @@ class LoginForm extends Component {
     renderCreateButton() {
       return (
         <Button style={styles.errorTextStyle} onPress={this.onCreateButtonPress.bind(this)} >
-           Create account
+          <Text style={styles.notanonTextStyle}>Create account</Text>
         </Button>
+      );
+    }
+
+    renderPopButton() {
+      return (
+        <CardSection>
+        <Button style={styles.errorTextStyle} onPress={this.onPopButton.bind(this)} >
+          <Text style={styles.notanonTextStyle}>Go Back</Text>
+        </Button>
+        </CardSection>
       );
     }
 
@@ -128,7 +143,7 @@ renderCreateForm() {
       </CardSection>
       <CardSection>
        <Input
-         placeholder='secret'
+         placeholder='password'
          label='password'
          secureTextEntry
          value={this.state.password}
@@ -138,7 +153,7 @@ renderCreateForm() {
       </CardSection>
       <CardSection>
         <Input
-         placeholder='secret'
+         placeholder='password'
          label='retype password'
          secureTextEntry
          value={this.state.checkpassword}
@@ -163,7 +178,7 @@ renderCreateForm() {
        <CardSection>
         <Input
         style={styles.paddingStyle}
-        placeholder='📷'
+        placeholder='username'
         label='username'
         onChangeText={this.onlgUsernameChange.bind(this)}
         value={this.props.usernameText}
@@ -172,7 +187,7 @@ renderCreateForm() {
        </CardSection>
        <CardSection>
         <Input
-          placeholder='secret'
+          placeholder='password'
           label='password'
           style={styles.errorTextStyle}
           secureTextEntry
@@ -191,16 +206,6 @@ renderCreateForm() {
   );
  }
 
- renderLogOut() {
-   return (
-     <CardSection>
-        {this.renderLogOutButton()}
-     </CardSection>
-   )
- }
-
-
-
 render() {
   console.log(typeof this.props.created);
   console.log(this.props.created);
@@ -217,44 +222,26 @@ render() {
 }
 
   if (this.props.created == true || this.props.created == 'true') {
-    if (this.props.isanon) {
-      return (
-      <View style={{ marginTop:50 }}>
-      <Card>
-      <CardSection>
-        <Text style={styles.infoTextStyle}> Hello {this.props.username}</Text>
-        <Switch
-         value={this.props.isanon}
-         onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
-        />
-        <Text  style={styles.infoTextStyle}>you are posting as "anon"</Text>
-        </CardSection>
-        {this.renderLogOut()}
-      </Card>
-
-      </View>
-    );
-    }
   return (
-    <View style={{ marginTop:50 }}>
-
-  <Card>
-    <Text style={styles.infoTextStyle}> Hello {this.props.username}</Text>
-    <Switch
-     value={this.props.isanon}
-     onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
-    />
-
-    <TouchableOpacity
-      onPress={() => this.getUserPhotos(this.props.username)}
-    >
-      <Text style={styles.infoTextStyle}>you are posting as<Text style={styles.notanonTextStyle}> {this.props.username}</Text></Text>
-    </TouchableOpacity>
-
-    {this.renderLogOut()}
-  </Card>
-
-  </View>
+      <ScrollView style={{ marginTop:50 }}>
+       <Card>
+       <CardSection>
+       <Text style={styles.infoTextStyle}> Hello {this.props.username}</Text>
+       <Switch
+        value={this.props.isanon}
+        onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
+       />
+      <TouchableOpacity onPress={() => this.getUserPhotos(this.props.username)} >
+        <Text style={styles.infoTextStyle}>you are posting as<Text style={styles.notanonTextStyle}> {this.props.username}</Text></Text>
+      </TouchableOpacity>
+      </CardSection>
+      <CardSection>
+       {this.renderLogOutButton()}
+      </CardSection>
+     </Card>
+     <View style={{ marginTop: 15 }} />
+     {this.renderPopButton()}
+    </ScrollView>
   );
 }
  return (
@@ -262,6 +249,8 @@ render() {
   {this.renderCreateForm()}
   <View style={{ marginTop: 25 }} />
  {this.renderLogInForm()}
+ <View style={{ marginTop: 15 }} />
+ {this.renderPopButton()}
 </ScrollView>
 );
 }
@@ -323,5 +312,6 @@ export default connect(mapStateToProps, {
   logOutUser,
   updateError,
   updateLogInError,
-  getPhotosByUser
+  getPhotosByUser,
+  popToHome
 })(LoginForm);

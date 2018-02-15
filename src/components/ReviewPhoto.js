@@ -11,13 +11,35 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import { connect } from 'react-redux';
-import { CardSection, Card } from './common';
-import { PostPhoto, ChangeCaption, PostVideo, switchMute } from '../actions';
+import { CardSection, Card, Button } from './common';
+import {
+  PostPhoto,
+  ChangeCaption,
+  PostVideo,
+  switchMute,
+  popToHome
+} from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 class ReviewPhoto extends Component {
+
+  onPopButton() {
+    this.props.popToHome();
+  }
+
+  renderPopButton() {
+    return (
+      <CardSection>
+      <Button style={styles.errorTextStyle}
+       onPress={this.onPopButton.bind(this)}
+       >
+        <Text style={styles.notanonTextStyle}>Cancel</Text>
+      </Button>
+      </CardSection>
+    );
+  }
 
   onCaptionChange(text) {
      this.props.ChangeCaption(text);
@@ -112,6 +134,7 @@ class ReviewPhoto extends Component {
     );
   }
    return (
+    <View>
      <Card>
         {this.renderVideoPhoto()}
         <CardSection>
@@ -128,20 +151,15 @@ class ReviewPhoto extends Component {
         value={this.props.caption}
         />
         </CardSection>
-        <TouchableOpacity
-        onPress={() => this.postPhoto()}
-        style={styles.buttonStyle}
-        >
-
-        <CardSection>
-          <Text style={styles.captionTextStyle}>
+      </Card>
+     <View style={{ marginTop: 5 }} />
+        <Button onPress={() => this.postPhoto()}
+        style={styles.buttonStyle}>
+          <Text style={styles.notanonTextStyle}>
           Post Photo/Video
           </Text>
-        </CardSection>
-
-        </TouchableOpacity>
-   </Card>
-
+        </Button>
+    </View>
   );
 }
 
@@ -150,6 +168,8 @@ render() {
  return (
   <ScrollView>
    {this.renderMainView()}
+   <View style={{ marginTop: 5 }} />
+   {this.renderPopButton()}
   </ScrollView>
 );
 }
@@ -198,8 +218,11 @@ headline: {
     marginTop: 300,
     width: 200,
     backgroundColor: 'yellow',
-
-
+  },
+  notanonTextStyle: {
+  fontSize: 18,
+  color: 'rgb(0,122,255)',
+  marginLeft:4,
   },
 loadingStyle: {
   borderBottomWidth: 1,
@@ -237,5 +260,6 @@ export default connect(mapStateToProps, {
   ChangeCaption,
   PostPhoto,
   PostVideo,
-  switchMute
+  switchMute,
+  popToHome
 })(ReviewPhoto);

@@ -203,6 +203,12 @@ export const getPhotosByUser = (poster, token, thepage) => {
   };
 };
 
+export const popToHome = () => {
+  return (dispatch) => {
+    Actions.popTo('PhotoView');
+  };
+}
+
 
 export const childInView = (c) => {
     return {
