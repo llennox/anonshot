@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import {
   PHOTOS,
@@ -14,6 +13,7 @@ import {
   BUREF_BOTTOM,
   LAYOUT,
   DELETE_PHOTO,
+  FLAG_PHOTO,
   LOADING,
   USER_PHOTOS,
   ONCE_LOADED_FALSE,
@@ -82,7 +82,7 @@ export const getPhotos = (dispatch, token, page) => {
          dispatch({ type: PHOTOS, payload: response.data, p: page });
          dispatch({ type: LOADING_FALSE });
          dispatch({ type: REFRESHING_FALSE });
-         Actions.PhotoView();
+         Actions.popTo('PhotoView');
       })
     .catch(function (error) {
       console.log(error.message);
@@ -142,17 +142,28 @@ console.log(error.message);
        }).then(function (response) {
          console.log(response);
          dispatch({ type: DELETE_PHOTO, payload: uuid });
-         Actions.PhotoView();
        }).catch(function (error) {
          console.log(error);
        });
      };
 };
 
-export const flagPhoto = (uuid, token) => {
+export const flagPhoto = (photouuid, useruuid, token) => {
   return (dispatch) => {
     axios.defaults.headers.common.Authorization = `Token ${token}`;
-    const url = 'https://anonshot.com/api/delete_photo/';
+     const url = 'https://anonshot.com/api/flag-photo/';
+    //const url = 'https://httpbin.org/post'
+    console.log(photouuid);
+    console.log(useruuid);
+    axios.post(url, {
+      photoUUID: photouuid,
+      userUUID: useruuid
+    }).then(function (response) {
+      console.log(response);
+      dispatch({ type: FLAG_PHOTO, payload: photouuid })
+    }).catch(function (error) {
+      console.log(error);
+    });
   };
 };
 

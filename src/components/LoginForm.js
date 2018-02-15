@@ -5,7 +5,8 @@ import { Text,
   Switch,
   View,
   Modal,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { usernameChanged,
@@ -17,7 +18,8 @@ import { usernameChanged,
   CreateAccount,
   logOutUser,
   updateError,
-  updateLogInError
+  updateLogInError,
+  getPhotosByUser
  } from '../actions';
 import { Button, Card, CardSection, Input } from './common';
 
@@ -50,6 +52,10 @@ class LoginForm extends Component {
       return re.test(email);
   };
 
+  getUserPhotos(poster) {
+      this.props.getPhotosByUser(poster, this.props.authtoken, 1);
+  }
+
 
     onUsernameChange(text) {
         this.props.usernameChanged(text);
@@ -78,7 +84,7 @@ class LoginForm extends Component {
     renderButton() {
       return (
         <Button style={styles.errorTextStyle} onPress={this.logInButtonPress.bind(this)} >
-           log in
+           <Text>log in</Text>
         </Button>
       );
     }
@@ -86,7 +92,7 @@ class LoginForm extends Component {
     renderLogOutButton() {
       return (
         <Button style={styles.errorTextStyle} onPress={this.logOutButtonPress.bind(this)} >
-           log out
+           <Text style={styles.notanonTextStyle}>log out</Text>
         </Button>
       );
     }
@@ -238,7 +244,13 @@ render() {
      value={this.props.isanon}
      onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
     />
-    <Text style={styles.infoTextStyle}>you are posting as {this.props.username}</Text>
+
+    <TouchableOpacity
+      onPress={() => this.getUserPhotos(this.props.username)}
+    >
+      <Text style={styles.infoTextStyle}>you are posting as<Text style={styles.notanonTextStyle}> {this.props.username}</Text></Text>
+    </TouchableOpacity>
+
     {this.renderLogOut()}
   </Card>
 
@@ -260,6 +272,12 @@ const styles = {
   fontSize: 22,
   alignSelf: 'center',
   color: 'black',
+
+},
+notanonTextStyle: {
+fontSize: 18,
+color: 'rgb(0,122,255)',
+marginLeft:4,
 
 },
   paddingStyle: {
@@ -304,5 +322,6 @@ export default connect(mapStateToProps, {
   isanonSwitch,
   logOutUser,
   updateError,
-  updateLogInError
+  updateLogInError,
+  getPhotosByUser
 })(LoginForm);

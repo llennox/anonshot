@@ -14,7 +14,8 @@ import {
   DELETE_PHOTO,
   USER_PHOTOS,
   BUCHILD_VIEWED,
-  BUREF_BOTTOM
+  BUREF_BOTTOM,
+  FLAG_PHOTO
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -112,9 +113,17 @@ export default (state = INITIAL_STATE, action) => {
           }
           };
         }
+
     case DELETE_PHOTO: {
-      console.log(action.payload);
-      console.log(state.photos.objects);
+      const filtered_photos = state.photos.objects.filter(item => item.uuid !== action.payload);
+      return { ...state,
+      photos: {
+        objects: filtered_photos
+      }
+      };
+    }
+
+    case FLAG_PHOTO: {
       const filtered_photos = state.photos.objects.filter(item => item.uuid !== action.payload);
       return { ...state,
       photos: {

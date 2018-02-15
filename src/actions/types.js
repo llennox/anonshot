@@ -16,6 +16,8 @@ export const LG_USERNAME_CHANGED = 'lg_username_changed';
 export const LG_PASSWORD_CHANGED = 'lg_password_changed';
 export const USER_PHOTOS = 'user_photos';
 export const ONCE_LOADED_FALSE = 'once_loaded_false';
+export const BANNED_TRUE = 'banned_true';
+export const FLAG_PHOTO = 'flag_photo';
 
 
 export const DELETE_PHOTO = 'delete_photo'

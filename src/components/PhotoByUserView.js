@@ -49,7 +49,7 @@ flagAlert(x) {
   'would you like to flag this post as inappropriate?',
   [
     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken)},
+    {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
   ],
   { cancelable: false }
 )
@@ -87,9 +87,8 @@ renderTrashFlag(x) {
     <TouchableOpacity
     onPress={() => this.flagAlert(x)}
     >
-    <Image style={styles.deleteFlagIcon}
-     source={require('./assets/white-flag-symbol.png')}
-    />
+    <Text style={styles.flagTextStyle}>flag post</Text>
+
     </TouchableOpacity>
   )
 }
@@ -281,12 +280,7 @@ calculateHeight(event, i) {
  if (this.props.user_photos.objects === undefined || this.props.user_photos.objects.length === 0) {
    return (
        <CardSection>
-         <Text style={styles.infoTextStyle}>something went wrong</Text>
-         <Image
-          style={{ width: 256, height: 256, alignSelf: 'center' }}
-          source={require('./assets/ramstine.gif')}
-          resizeMode="contain"
-         />
+         <Text style={styles.infoTextStyle}>this user has not posted anything</Text>
       </CardSection>
     );
   }
@@ -390,6 +384,12 @@ deleteFlagIcon: {
     marginTop:1,
     flex: 1
 
+},
+flagTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-end',
+marginRight:2
 }
 };
 

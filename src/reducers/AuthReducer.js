@@ -12,7 +12,8 @@ import { USERNAME_CHANGED,
   ONCE_LOADED,
   LG_USERNAME_CHANGED,
   LG_PASSWORD_CHANGED,
-  ONCE_LOADED_FALSE
+  ONCE_LOADED_FALSE,
+  BANNED_TRUE
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -27,13 +28,16 @@ username: '',
  isanon: false,
  photos: {},
  logInError: '',
- once_loaded: false
+ once_loaded: false,
+ banned: false
 };
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
       case ISANON:
          return { ...state, isanon: action.payload };
+      case BANNED_TRUE:
+         return { ...state, banned: true };
       case ONCE_LOADED:
          return { ...state, once_loaded: true };
       case ONCE_LOADED_FALSE:

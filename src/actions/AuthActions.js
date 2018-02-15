@@ -15,8 +15,10 @@ import { USERNAME_CHANGED,
   UPDATE_LOGIN_ERROR,
   ONCE_LOADED,
   LG_USERNAME_CHANGED,
-  LG_PASSWORD_CHANGED
+  LG_PASSWORD_CHANGED,
+  BANNED_TRUE
 } from './types';
+import DeviceInfo from 'react-native-device-info';
 import { getPhotosWithAction, getPhotos, grabSinglePhoto } from './PhotoActions';
 
 export const usernameChanged = (text) => {
@@ -156,16 +158,37 @@ export const logInUser = ( username, password, token ) => {
   };
 };
 
-//create another function that returns photo main view with api request
-//call createUser() then getPhotos() in initialView else statement just
-//getPhotos() in if block
+function consMjolnir(dispatch) {
+  const uniqueID = DeviceInfo.getUniqueID();
+  const url = 'https://anonshot.com/api/ban-check/';
+  //const url = 'https://httpbin.org/post'
+  axios.post(url, {
+    deviceUUID: uniqueID
+  }).then(function (response) {
+     console.log(response.data);
+     if (response.data == true) {
+       dispatch({ type: BANNED_TRUE });
+     };
+
+  }).catch(function (error) {
+    console.log(error);
+    return error;
+  });
+}
+
+function returnUUID() {
+  const uniqueID = DeviceInfo.getUniqueID();
+  return uniqueID;
+};
+
 export const createUser = (dispatch) => {
-  console.log('create user');
-  console.log(dispatch);
   axios.defaults.headers.common['Authorization'] = '';
   const url = 'https://anonshot.com/api/create-user/';
   //const url = 'https://httpbin.org/post'
-  axios.post(url).then(function (response) {
+  let deviceUUID = returnUUID();
+  axios.post(url, {
+    deviceUUID: deviceUUID
+  }).then(function (response) {
     const token = response.data.token;
     console.log(response.data);
     AsyncStorage.setItem('user_uuid', response.data.user_uuid);
@@ -182,11 +205,12 @@ export const createUser = (dispatch) => {
 
 export const initialView = () => {
   return (dispatch) => {
-    console.log('initialview');
+    console.log(consMjolnir(dispatch));
     dispatch({ type: LOADING });
     dispatch({ type: ONCE_LOADED });
     return AsyncStorage.multiGet(['authtoken', 'user_uuid', 'created', 'username'])
      .then((item) => {
+       console.log(item);
      if (item[0][1] != null && item[1][1] != null && item[2][1] != null && item[3][1] != null) {
        console.log(item);
        dispatch({ type: SET_AUTH, payload: item });
@@ -195,10 +219,11 @@ export const initialView = () => {
        console.log('dis');
        createUser(dispatch);
        //send post to create account
-     }
+     };
   });
  };
 };
+
 
 export const logOutUser = (token) => {
   return (dispatch) => {

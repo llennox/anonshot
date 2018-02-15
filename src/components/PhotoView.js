@@ -9,13 +9,15 @@ import { Text,
   TouchableWithoutFeedback,
   ActivityIndicator,
   Image,
-  Alert
+  Alert,
+  AsyncStorage
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { connect } from 'react-redux';
 import { CardSection, Card } from './common';
-import { initialView,
+import {
+  initialView,
   RenderComments,
   setRefreshing,
   switchMute,
@@ -32,9 +34,25 @@ const deviceHeight = Dimensions.get('window').height;
 
 class PhotoView extends Component {
 
+
+
   constructor(props) {
     super(props);
-    console.log('constructorprops');
+    AsyncStorage.getItem('user_uuid').then((item) => {
+      if (item == null) {
+        return (
+          Alert.alert(
+        'Rules',
+        '1. you will not post nudity \n 2. you will not post anything that violates United States Law \n you are agreeing to the full terms of use found at https://umbre.cam/terms by pressing I Agree',
+        [
+          {text: 'I agree', onPress: () => console.log('I agree'), style: 'cancel'},
+        ],
+        { cancelable: false }
+      )
+      );
+      };
+    });
+
     if (this.props.once_loaded) {
       console.log('secondTIme');
       return;
@@ -59,7 +77,7 @@ flagAlert(x) {
   'would you like to flag this post as inappropriate?',
   [
     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken)},
+    {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
   ],
   { cancelable: false }
 )
@@ -97,9 +115,7 @@ renderTrashFlag(x) {
     <TouchableOpacity
     onPress={() => this.flagAlert(x)}
     >
-    <Image style={styles.deleteFlagIcon}
-     source={require('./assets/white-flag-symbol.png')}
-    />
+    <Text style={styles.flagTextStyle}>flag post</Text>
     </TouchableOpacity>
   )
 }
@@ -348,7 +364,7 @@ justifyContent: 'space-between',
          onPress={() => this.commentButtonPress({ x })}
          style={styles.buttonStyle}
          >
-           <Text style={styles.timeTextStyle}>
+           <Text style={styles.notanonTextStyle}>
            View all {x.comments.length} Comment(s)/ Post comment
            </Text>
          </TouchableOpacity>
@@ -388,8 +404,14 @@ notanonTextStyle: {
 fontSize: 18,
 color: 'rgb(0,122,255)',
 marginLeft:4,
-
 },
+flagTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-end',
+marginRight:2
+},
+
 timeTextStyle: {
 fontSize: 14,
 marginLeft:4,
@@ -429,7 +451,8 @@ return {
   child_viewed: state.photos.child_viewed,
   bottom_refresh: state.photos.bottom_refresh,
   saved_layout: state.photos.saved_layout,
-  once_loaded: state.auth.once_loaded
+  once_loaded: state.auth.once_loaded,
+  banned: state.auth.banned
  };
 };
 

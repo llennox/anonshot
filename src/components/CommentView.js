@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { CardSection, Card } from './common';
 import {
   PostComment,
+  getPhotosByUser,
   DeleteComment,
   ChangeComment,
   switchMute,
@@ -37,6 +38,10 @@ class CommentView extends Component {
         this.props.setRefreshingSingle(true, this.props.single_photo.x.uuid, this.props.authtoken);
 }
 
+getUserPhotos(poster) {
+    this.props.getPhotosByUser(poster, this.props.authtoken, 1);
+}
+
 flagAlert(x) {
   return (
     Alert.alert(
@@ -44,7 +49,7 @@ flagAlert(x) {
   'would you like to flag this post as inappropriate?',
   [
     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => console.log('OK Pressed')},
+    {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
   ],
   { cancelable: false }
 )
@@ -82,21 +87,63 @@ renderTrashFlag(x) {
     <TouchableOpacity
     onPress={() => this.flagAlert(x)}
     >
-    <Image style={styles.deleteFlagIcon}
-     source={require('./assets/white-flag-symbol.png')}
+  <Text style={styles.flagTextStyle}>flag post</Text>
     />
     </TouchableOpacity>
   )
 }
 
+renderComment(items) {
+
+  if (items.poster !== 'anon') {
+    console.log(items)
+    return (
+     <View>
+      <TouchableOpacity
+        onPress={() => this.getUserPhotos(items.poster)}
+      >
+        <Text style={styles.notanonTextStyle} >{items.poster}: <Text style={styles.captionTextStyle}> { items.comments }</Text></Text>
+          </TouchableOpacity>
+
+        <Text style={styles.timeTextStyle}>
+        <Moment element={Text} fromNow>{items.timestamp}</Moment>
+        </Text>
+     </View>
+
+    );
+  }
+   return (
+
+<View>
+<Text style={styles.captionTextStyle}>{items.poster}: { items.comments }</Text>
+<Text style={styles.timeTextStyle}>
+<Moment element={Text} fromNow>{items.timestamp}</Moment>
+</Text>
+</View>
+
+  );
+};
+
 renderCaption(x) {
-
-  return (
-      <Text style={styles.captionTextStyle} >{x.poster}: {x.caption}</Text>
-);
-
-}
-
+  if (x.poster !== 'anon') {
+    return (
+      <View>
+      <TouchableOpacity
+        onPress={() => this.getUserPhotos(x.poster)}
+      >
+        <Text style={styles.notanonTextStyle} >{x.poster}:</Text>
+      </TouchableOpacity>
+        <Text style={styles.timeTextStyle} >{x.caption}</Text>
+      </View>
+    );
+  }
+   return (
+     <View>
+       <Text style={styles.captionTextStyle} >{x.poster}:</Text>
+       <Text style={styles.timeTextStyle} >{x.caption}</Text>
+     </View>
+  );
+};
 
   postComment() {
     const commentText = this.props.comment;
@@ -185,10 +232,7 @@ justifyContent: 'space-between', marginTop:50
         </CardSection>
         {x.comments.map((items) =>
           <Card key={items.uuid}>
- <Text style={styles.captionTextStyle}>{items.poster}: { items.comments }</Text>
- <Text style={styles.timeTextStyle}>
- <Moment element={Text} fromNow>{items.timestamp}</Moment>
- </Text>
+          {this.renderComment(items)}
           </Card>
         )}
         <TextInput
@@ -209,7 +253,7 @@ justifyContent: 'space-between', marginTop:50
         style={styles.buttonStyle}
         >
         <CardSection>
-          <Text style={styles.captionTextStyle}>
+          <Text style={styles.notanonTextStyle}>
           Make Comment
           </Text>
         </CardSection>
@@ -226,16 +270,19 @@ const styles = {
   color: 'black',
 },
 captionTextStyle: {
-fontSize: 14,
-alignSelf: 'center',
+fontSize: 18,
 color: 'black',
-alignSelf: 'flex-start'
+marginLeft:4
+},
+notanonTextStyle: {
+fontSize: 18,
+color: 'rgb(0,122,255)',
+marginLeft:4,
 },
 timeTextStyle: {
-fontSize: 10,
-alignSelf: 'center',
-color: 'black',
-alignSelf: 'flex-start'
+fontSize: 14,
+marginLeft:4,
+color: 'black'
 },
 paddingStyle: {
   fontSize: 30,
@@ -250,7 +297,13 @@ deleteFlagIcon: {
     marginTop:1,
     flex: 1
 
-}
+},
+flagTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-end',
+marginRight:2
+},
 };
 
 const mapStateToProps = state => {
@@ -268,6 +321,7 @@ return {
 
 export default connect(mapStateToProps, {
   PostComment,
+  getPhotosByUser,
   DeleteComment,
   ChangeComment,
   switchMute,
