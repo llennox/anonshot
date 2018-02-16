@@ -34,9 +34,7 @@ const deviceHeight = Dimensions.get('window').height;
 
 class PhotoView extends Component {
 
-
-
-  constructor(props) {
+constructor(props) {
     super(props);
     AsyncStorage.getItem('user_uuid').then((item) => {
       if (item == null) {
@@ -45,79 +43,28 @@ class PhotoView extends Component {
         'Rules',
         '1. you will not post nudity \n 2. you will not post anything that violates United States Law \n you are agreeing to the full terms of use found at https://umbre.cam/terms by pressing I Agree',
         [
-          {text: 'I agree', onPress: () => console.log('I agree'), style: 'cancel'},
+          { text: 'I agree', onPress: () => console.log('I agree'), style: 'cancel' },
         ],
         { cancelable: false }
       )
       );
-      };
+      }
     });
 
     if (this.props.once_loaded) {
       console.log('secondTIme');
       return;
-    } else {
+    }
     console.log('first_only');
     this.props.initialView();
-  };
 }
-
-  //componentWillMount() {
-    //    this.props.initialView();
-//}
 
 componentDidMount() {
   this.props.setRefreshing(false, this.props.authtoken, 0, 0);
 }
 
-flagAlert(x) {
-  return (
-    Alert.alert(
-  '',
-  'would you like to flag this post as inappropriate?',
-  [
-    {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
-  ],
-  { cancelable: false }
-)
-);
-}
-
-
-trashAlert(x) {
-  return (
-    Alert.alert(
-  '',
-  'would you like to delete this post?',
-  [
-    {text: 'No', onPress: () => console.log('NO'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken)},
-  ],
-  { cancelable: false }
-)
-);
-}
-
-renderTrashFlag(x) {
-    if (x.useruuid === this.props.user_uuid) {
-      return (
-        <TouchableOpacity
-        onPress={() => this.trashAlert(x)}
-        >
-        <Image style={styles.deleteFlagIcon}
-         source={require('./assets/trash.png')}
-        />
-        </TouchableOpacity>
-      );
-    }
-  return (
-    <TouchableOpacity
-    onPress={() => this.flagAlert(x)}
-    >
-    <Text style={styles.flagTextStyle}>flag post</Text>
-    </TouchableOpacity>
-  )
+getUserPhotos(poster) {
+    this.props.getPhotosByUser(poster, this.props.authtoken, 1);
 }
 
 handleScroll(event) {
@@ -131,18 +78,18 @@ handleScroll(event) {
         const p = (l / 8) + 1;
         this.props.nextPage(this.props.authtoken, p);
   }
-  const child_viewed = this.props.child_viewed;
-  console.log(child_viewed);
-  const child_viewed_below = (this.props.child_viewed + 1);
+  const childViewed = this.props.child_viewed;
+  console.log(childViewed);
+  const childViewedBelow = (this.props.child_viewed + 1);
   const h = event.nativeEvent.contentOffset.y;
   const a = this.props.saved_layout.objects;
-  if (a.length !== child_viewed_below && child_viewed >= 0) {
-   if (h >= a[child_viewed_below][child_viewed_below]) {
-      this.props.childInView(child_viewed_below);
-  } else if (h <= a[child_viewed][child_viewed] && child_viewed !== 0) {
-      const child_viewed_up = (child_viewed - 1);
-      this.props.childInView(child_viewed_up);
-  };
+  if (a.length !== childViewedBelow && childViewed >= 0) {
+   if (h >= a[childViewedBelow][childViewedBelow]) {
+      this.props.childInView(childViewedBelow);
+  } else if (h <= a[childViewed][childViewed] && childViewed !== 0) {
+      const childViewedUp = (childViewed - 1);
+      this.props.childInView(childViewedUp);
+  }
 }
 }
 
@@ -157,20 +104,67 @@ calculateHeight(event, i) {
     this.props.saveLayout(sendArray);
   } else {
     console.log('dupe');
-  };
+  }
 }
 
   commentButtonPress(aphoto) {
       this.props.RenderComments(aphoto);
   }
 
-  getUserPhotos(poster) {
-      this.props.getPhotosByUser(poster, this.props.authtoken, 1);
-  }
-
-
   refreshList() {
         this.props.setRefreshing(true, this.props.authtoken);
+}
+
+
+flagAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to flag this post as inappropriate?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
+
+trashAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to delete this post?',
+  [
+    { text: 'No', onPress: () => console.log('NO'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
+renderTrashFlag(x) {
+    if (x.useruuid === this.props.user_uuid) {
+      return (
+        <TouchableOpacity
+        onPress={() => this.trashAlert(x)}
+        >
+        <Image
+        style={styles.deleteFlagIcon}
+         source={require('./assets/trash.png')}
+        />
+        </TouchableOpacity>
+      );
+    }
+  return (
+    <TouchableOpacity
+    onPress={() => this.flagAlert(x)}
+    >
+    <Text style={styles.flagTextStyle}>flag post</Text>
+    </TouchableOpacity>
+  );
 }
 
   renderVideoPhoto(x, i) {
@@ -276,7 +270,7 @@ calculateHeight(event, i) {
       return (
         <Card>
         <Image
-         style={{ width: 256, height: 256, alignSelf: 'center' }}
+         style={{ width: 256, height: 256, alignSelf: 'center', marginTop: 100 }}
          source={require('./assets/ramstine.gif')}
          resizeMode="contain"
         />
@@ -286,7 +280,7 @@ calculateHeight(event, i) {
     return;
   }
 
-  renderCaption(x, i) {
+  renderCaption(x) {
    if (x.poster !== 'anon') {
      return (
        <View>
@@ -306,7 +300,6 @@ calculateHeight(event, i) {
         <Text style={styles.timeTextStyle} >{x.caption}</Text>
       </View>
   );
-
   }
 
   renderMainView() {
@@ -344,11 +337,12 @@ calculateHeight(event, i) {
                 }
       >
        {mapMe.map((x, i) =>
-         <View key={i} onLayout={(event) => {this.calculateHeight(event, {i})}}>
+         <View key={i} onLayout={(event) => { this.calculateHeight(event, { i }); }}>
          <Card id={x.uuid} key={i} >
-         <View style={{ alignContent: 'flex-start',
-justifyContent: 'space-between',
-   }}>
+         <View
+         style={{ alignContent: 'flex-start',
+         justifyContent: 'space-between',
+       }}>
 {this.renderCaption(x, i)}
 {this.renderTrashFlag(x)}
 </View>
@@ -382,11 +376,12 @@ justifyContent: 'space-between',
   render() {
    return (
     <View>
-     {this.renderMainView()}
+      {this.renderMainView()}
     </View>
   );
 }
 }
+//   {this.renderMainView()}
 const styles = {
   infoTextStyle: {
   fontSize: 14,
@@ -397,24 +392,24 @@ const styles = {
 captionTextStyle: {
 fontSize: 18,
 color: 'black',
-marginLeft:4,
+marginLeft: 4,
 
 },
 notanonTextStyle: {
 fontSize: 18,
 color: 'rgb(0,122,255)',
-marginLeft:4,
+marginLeft: 4,
 },
 flagTextStyle: {
 fontSize: 12,
 color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
-marginRight:2
+marginRight: 2
 },
 
 timeTextStyle: {
 fontSize: 14,
-marginLeft:4,
+marginLeft: 4,
 color: 'black',
 
 },
@@ -433,7 +428,7 @@ marginRight: 5
 deleteFlagIcon: {
     alignSelf: 'flex-end',
     marginRight: 10,
-    marginTop:1,
+    marginTop: 1,
     flex: 1
 
 }
