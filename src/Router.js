@@ -4,7 +4,7 @@ import LoginForm from './components/LoginForm';
 import CommentView from './components/CommentView';
 import PhotoView from './components/PhotoView';
 import ReviewPhoto from './components/ReviewPhoto';
-import TakePhoto from './components/TakePhoto';
+import upTakePhoto from './components/upTakePhoto';
 import PhotoByUserView from './components/PhotoByUserView';
 
 
@@ -20,7 +20,7 @@ const RouterComponent = () => {
         component={PhotoView}
         title="UmbreCam"
         leftButtonImage={require('./components/assets/photo-camera.png')}
-        showIcon={true}
+
         onLeft={() => Actions.Camera()}
         rightButtonImage={require('./components/assets/user-shape.png')}
         onRight={() => Actions.login()}
@@ -28,7 +28,7 @@ const RouterComponent = () => {
        />
        <Scene
         onLeft={() => Actions.photoView()}
-        component={TakePhoto}
+        component={upTakePhoto}
         key='Camera'
         navigationBarStyle={{ backgroundColor: 'transparent',
         borderBottomColor: 'transparent' }}

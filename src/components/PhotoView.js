@@ -15,6 +15,7 @@ import { Text,
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { connect } from 'react-redux';
+import { RNCamera } from 'react-native-camera';
 import { CardSection, Card } from './common';
 import {
   initialView,
