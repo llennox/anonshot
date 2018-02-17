@@ -168,6 +168,7 @@ function consMjolnir(dispatch) {
      if (response.data === true) {
        dispatch({ type: BANNED_TRUE });
      }
+     return;
   }).catch(function (error) {
     console.log(error);
     return error;
@@ -203,7 +204,7 @@ export const createUser = (dispatch) => {
 
 export const initialView = () => {
   return (dispatch) => {
-    console.log(consMjolnir(dispatch));
+    consMjolnir(dispatch);
     dispatch({ type: LOADING });
     dispatch({ type: ONCE_LOADED });
     return AsyncStorage.multiGet(['authtoken', 'user_uuid', 'created', 'username'])

@@ -16,7 +16,6 @@ import { PhotoLocation, VideoLocation, Reset } from '../actions';
 class TakePhoto extends Component {
   constructor(props) {
     super(props);
-
     this.camera = null;
 
     this.state = {
@@ -29,16 +28,16 @@ class TakePhoto extends Component {
       },
       isRecording: false
     };
+    console.log(this.state.camera);
   }
 
    componentWillMount() {
-      console.log(this);
+      console.log(this.state.camera);
       this.props.Reset();
   }
 
   takePicture = () => {
     if (this.camera) {
-      console.log('pppppp');
       this.camera.capture()
         .then((path) => this.props.PhotoLocation(path))
         .catch(err => console.error(err));
