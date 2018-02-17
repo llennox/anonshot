@@ -1,13 +1,12 @@
 package com.anonshot;
 
 import android.app.Application;
-
+import org.reactnative.camera.RNCameraPackage;
 import com.facebook.react.ReactApplication;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.brentvatne.react.ReactVideoPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
-import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -32,7 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactVideoPackage(),
             new RNFetchBlobPackage(),
             new FastImageViewPackage(),
-            new RCTCameraPackage()
+            new RNCameraPackage()
       );
     }
 
