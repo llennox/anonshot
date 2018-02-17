@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
-  Dimensions,
   View,
   Text
 } from 'react-native';

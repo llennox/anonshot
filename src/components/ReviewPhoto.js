@@ -29,23 +29,14 @@ class ReviewPhoto extends Component {
     this.props.popToHome();
   }
 
-  renderPopButton() {
-    return (
-      <CardSection>
-      <Button style={styles.errorTextStyle}
-       onPress={this.onPopButton.bind(this)}
-       >
-        <Text style={styles.notanonTextStyle}>Cancel</Text>
-      </Button>
-      </CardSection>
-    );
-  }
-
   onCaptionChange(text) {
      this.props.ChangeCaption(text);
   }
 
   postPhoto() {
+    if (this.props.banned) {
+      return;
+    }
         const token = this.props.authtoken;
         const caption = this.props.caption;
         console.log(this.props);
@@ -58,6 +49,19 @@ class ReviewPhoto extends Component {
           const media = this.props.saved_photo_location;
           this.props.PostPhoto(token, useruuid, caption, media);
         }
+  }
+
+  renderPopButton() {
+    return (
+      <CardSection>
+      <Button
+      style={styles.errorTextStyle}
+       onPress={this.onPopButton.bind(this)}
+      >
+        <Text style={styles.notanonTextStyle}>Cancel</Text>
+      </Button>
+      </CardSection>
+    );
   }
 
   renderVideoPhoto() {
@@ -141,8 +145,8 @@ class ReviewPhoto extends Component {
         <TextInput
         maxHeight={250}
         autoGrow={false}
-        editable ={true}
-        maxLength ={255}
+        editable={true}
+        maxLength={255}
         autoCorrect={true}
         multiline={true}
         style={styles.inputStyle}
@@ -153,8 +157,10 @@ class ReviewPhoto extends Component {
         </CardSection>
       </Card>
      <View style={{ marginTop: 5 }} />
-        <Button onPress={() => this.postPhoto()}
-        style={styles.buttonStyle}>
+        <Button
+        onPress={() => this.postPhoto()}
+        style={styles.buttonStyle}
+        >
           <Text style={styles.notanonTextStyle}>
           Post Photo/Video
           </Text>
@@ -222,7 +228,7 @@ headline: {
   notanonTextStyle: {
   fontSize: 18,
   color: 'rgb(0,122,255)',
-  marginLeft:4,
+  marginLeft: 4,
   },
 loadingStyle: {
   borderBottomWidth: 1,
@@ -252,7 +258,8 @@ return {
   caption: state.savedphoto.caption,
   refreshing: state.photos.refreshing,
   muted: state.photos.muted,
-  paused: state.photos.paused
+  paused: state.photos.paused,
+  banned: state.auth.banned
  };
 };
 

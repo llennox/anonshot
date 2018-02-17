@@ -90,15 +90,15 @@ export const lgpasswordChanged = (text) => {
 
 export const updateLogInError = (message) => {
   return (dispatch) => {
-    dispatch({ type: UPDATE_LOGIN_ERROR, payload: message })
-  }
-}
+    dispatch({ type: UPDATE_LOGIN_ERROR, payload: message });
+  };
+};
 
 export const updateError = (message) => {
   return (dispatch) => {
-    dispatch({ type: UPDATE_ERROR, payload: message })
-  }
-}
+    dispatch({ type: UPDATE_ERROR, payload: message });
+  };
+};
 
 export const CreateAccount = (username, email, password, token) => {
     return (dispatch) => {
@@ -131,8 +131,7 @@ export const CreateAccount = (username, email, password, token) => {
 }
 
 
-export const logInUser = ( username, password, token ) => {
-
+export const logInUser = (username, password, token) => {
   return (dispatch) => {
     dispatch({ type: LOADING });
     axios.defaults.headers.common['Authorization'] = `Token ${token}`;
@@ -166,10 +165,9 @@ function consMjolnir(dispatch) {
     deviceUUID: uniqueID
   }).then(function (response) {
      console.log(response.data);
-     if (response.data == true) {
+     if (response.data === true) {
        dispatch({ type: BANNED_TRUE });
-     };
-
+     }
   }).catch(function (error) {
     console.log(error);
     return error;
@@ -219,7 +217,7 @@ export const initialView = () => {
        console.log('dis');
        createUser(dispatch);
        //send post to create account
-     };
+     }
   });
  };
 };

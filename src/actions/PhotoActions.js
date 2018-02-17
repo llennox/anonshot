@@ -14,13 +14,9 @@ import {
   LAYOUT,
   DELETE_PHOTO,
   FLAG_PHOTO,
-  LOADING,
   USER_PHOTOS,
-  ONCE_LOADED_FALSE,
-  RESET_SCROLL
+  ONCE_LOADED_FALSE
  } from './types';
- import { createUser } from './AuthActions';
-
 
  export const nextPage = (token, page) => {
     return (dispatch) => {
@@ -160,9 +156,9 @@ export const flagPhoto = (photouuid, useruuid, token) => {
       userUUID: useruuid
     }).then(function (response) {
       console.log(response);
-      dispatch({ type: FLAG_PHOTO, payload: photouuid })
-    }).catch(function (error) {
-      console.log(error);
+      dispatch({ type: FLAG_PHOTO, payload: photouuid });
+    }).catch(function () {
+        dispatch({ type: FLAG_PHOTO, payload: photouuid });
     });
   };
 };
@@ -194,12 +190,10 @@ export const getPhotosByUser = (poster, token, thepage) => {
        })
      .catch(function (error) {
        console.log(error.message);
-
      });
       },
       (error) => console.log(error.message)
     );
-
   };
 };
 

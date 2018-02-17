@@ -34,12 +34,12 @@ class CommentView extends Component {
      this.props.ChangeComment(text);
   }
 
-  refreshList() {
-        this.props.setRefreshingSingle(true, this.props.single_photo.x.uuid, this.props.authtoken);
-}
-
 getUserPhotos(poster) {
     this.props.getPhotosByUser(poster, this.props.authtoken, 1);
+}
+
+refreshList() {
+      this.props.setRefreshingSingle(true, this.props.single_photo.x.uuid, this.props.authtoken);
 }
 
 flagAlert(x) {
@@ -48,8 +48,8 @@ flagAlert(x) {
   '',
   'would you like to flag this post as inappropriate?',
   [
-    {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken) },
   ],
   { cancelable: false }
 )
@@ -63,12 +63,22 @@ trashAlert(x) {
   '',
   'would you like to delete this post?',
   [
-    {text: 'No', onPress: () => console.log('NO'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken)},
+    { text: 'No', onPress: () => console.log('NO'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.deletePhoto(x.uuid, this.props.authtoken) },
   ],
   { cancelable: false }
 )
 );
+}
+
+postComment() {
+  if (this.props.banned) {
+    return;
+  }
+  const commentText = this.props.comment;
+  const token = this.props.authtoken;
+  const photouuid = this.props.single_photo.x.uuid;
+  this.props.PostComment(commentText, token, photouuid);
 }
 
 renderTrashFlag(x) {
@@ -77,7 +87,8 @@ renderTrashFlag(x) {
         <TouchableOpacity
         onPress={() => this.trashAlert(x)}
         >
-        <Image style={styles.deleteFlagIcon}
+        <Image
+        style={styles.deleteFlagIcon}
          source={require('./assets/trash.png')}
         />
         </TouchableOpacity>
@@ -87,22 +98,20 @@ renderTrashFlag(x) {
     <TouchableOpacity
     onPress={() => this.flagAlert(x)}
     >
-  <Text style={styles.flagTextStyle}>flag post</Text>
-    />
+     <Text style={styles.flagTextStyle}>flag post</Text>
+
     </TouchableOpacity>
-  )
+  );
 }
 
 renderComment(items) {
-
   if (items.poster !== 'anon') {
-    console.log(items)
     return (
      <View>
       <TouchableOpacity
         onPress={() => this.getUserPhotos(items.poster)}
       >
-        <Text style={styles.notanonTextStyle} >{items.poster}: <Text style={styles.captionTextStyle}> { items.comments }</Text></Text>
+      <Text style={styles.notanonTextStyle} >{items.poster}:<Text style={styles.captionTextStyle}> { items.comments }</Text></Text>
       </TouchableOpacity>
 
         <Text style={styles.timeTextStyle}>
@@ -121,7 +130,7 @@ renderComment(items) {
      </View>
 
   );
-};
+}
 
 renderCaption(x) {
   if (x.poster !== 'anon') {
@@ -142,14 +151,8 @@ renderCaption(x) {
        <Text style={styles.timeTextStyle} >{x.caption}</Text>
      </View>
   );
-};
+}
 
-  postComment() {
-    const commentText = this.props.comment;
-    const token = this.props.authtoken;
-    const photouuid = this.props.single_photo.x.uuid;
-    this.props.PostComment(commentText, token, photouuid);
-  }
   renderVideoPhoto(x) {
     if (x.isvideo) {
       return (
@@ -207,7 +210,6 @@ renderCaption(x) {
 
   render() {
     const x = this.props.single_photo.x;
-    console.log(x);
    return (
      <ScrollView
      refreshControl={
@@ -218,9 +220,11 @@ renderCaption(x) {
      }
      >
         <CardSection id={x.uuid} key={x.uuid}>
-        <View style={{ alignContent: 'flex-start',
-justifyContent: 'space-between', marginTop:50
-  }}>
+        <View
+        style={{ alignContent: 'flex-start',
+                 justifyContent: 'space-between',
+                 marginTop: 50
+      }}>
 {this.renderCaption(x)}
 {this.renderTrashFlag(x)}
 </View>
@@ -239,8 +243,8 @@ justifyContent: 'space-between', marginTop:50
         <TextInput
         maxHeight={250}
         autoGrow={false}
-        editable ={true}
-        maxLength ={255}
+        editable={true}
+        maxLength={255}
         autoCorrect={true}
         multiline={true}
         style={styles.inputStyle}
@@ -273,16 +277,16 @@ const styles = {
 captionTextStyle: {
 fontSize: 18,
 color: 'black',
-marginLeft:4
+marginLeft: 4
 },
 notanonTextStyle: {
 fontSize: 18,
 color: 'rgb(0,122,255)',
-marginLeft:4,
+marginLeft: 4,
 },
 timeTextStyle: {
 fontSize: 14,
-marginLeft:4,
+marginLeft: 4,
 color: 'black'
 },
 paddingStyle: {
@@ -295,7 +299,7 @@ paddingStyle: {
 deleteFlagIcon: {
     alignSelf: 'flex-end',
     marginRight: 10,
-    marginTop:1,
+    marginTop: 1,
     flex: 1
 
 },
@@ -303,7 +307,7 @@ flagTextStyle: {
 fontSize: 12,
 color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
-marginRight:2
+marginRight: 2
 },
 };
 
@@ -317,6 +321,7 @@ return {
   comment: state.photos.comment,
   muted: state.photos.muted,
   refreshing: state.photos.refreshing,
+  banned: state.auth.banned
  };
 };
 

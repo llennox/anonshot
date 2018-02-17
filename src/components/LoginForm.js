@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Text,
   Image,
-  Dimensions,
   Switch,
   View,
-  Modal,
   ScrollView,
   TouchableOpacity
 } from 'react-native';
@@ -39,32 +37,22 @@ class LoginForm extends Component {
     });
   } else if (username.length < 4 || username.indexOf(' ') >= 0) {
          this.setState({ error: 'username must be 4 or more characters', loading: false });
-     } else if (!this.validateEmail(this.state.email)){
+     } else if (!this.validateEmail(this.state.email)) {
          this.props.updateError('you must enter a valid email')
          this.setState({ error: 'you must enter a valid email', loading: false });
      } else {
          this.setState({ error: '' });
-         this.props.CreateAccount( username, email, password, this.props.authtoken )
+         this.props.CreateAccount(username, email, password, this.props.authtoken )
      }
   }
 
-  validateEmail = (email) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-  };
-
-  getUserPhotos(poster) {
-      this.props.getPhotosByUser(poster, this.props.authtoken, 1);
+  onUsernameChange(text) {
+      this.props.usernameChanged(text);
   }
 
-
-    onUsernameChange(text) {
-        this.props.usernameChanged(text);
-    }
-
-    onPasswordChange(text) {
-        this.props.passwordChanged(text);
-    }
+  onPasswordChange(text) {
+      this.props.passwordChanged(text);
+  }
 
     onlgUsernameChange(text) {
         this.props.lgusernameChanged(text);
@@ -78,13 +66,22 @@ class LoginForm extends Component {
       this.props.popToHome();
     }
 
+    getUserPhotos(poster) {
+        this.props.getPhotosByUser(poster, this.props.authtoken, 1);
+    }
+
     logInButtonPress() {
-      this.props.logInUser( this.props.lgusername, this.props.lgpassword, this.props.authtoken );
+      this.props.logInUser(this.props.lgusername, this.props.lgpassword, this.props.authtoken );
     }
 
     logOutButtonPress() {
-      this.props.logOutUser( this.props.authtoken );
+      this.props.logOutUser(this.props.authtoken);
     }
+
+    validateEmail = (email) => {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
 
     renderButton() {
       return (
@@ -209,6 +206,15 @@ renderCreateForm() {
 render() {
   console.log(typeof this.props.created);
   console.log(this.props.created);
+  if (this.props.banned) {
+    return (
+      <ScrollView style={{ marginTop: 50 }}>
+      <Text style={styles.errorTextStyle}>You are banned got to umbre.cam and find an email form to plead your case</Text>
+       <View style={{ marginTop: 15 }} />
+       {this.renderPopButton()}
+      </ScrollView>
+    );
+  }
   if (this.props.loading) {
     return (
     <CardSection >
@@ -221,7 +227,31 @@ render() {
  );
 }
 
-  if (this.props.created == true || this.props.created == 'true') {
+  if (this.props.created === true || this.props.created === 'true') {
+    if (this.props.isanon) {
+      return (
+        <ScrollView style={{ marginTop:50 }}>
+         <Card>
+         <CardSection>
+         <Text style={styles.infoTextStyle}> Hello {this.props.username}</Text>
+         <Switch
+          value={this.props.isanon}
+          onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
+         />
+        <TouchableOpacity onPress={() => this.getUserPhotos(this.props.username)} >
+          <Text style={styles.infoTextStyle}>you are posting as
+          <Text style={styles.infoTextStyle}>"anon"</Text></Text>
+        </TouchableOpacity>
+        </CardSection>
+        <CardSection>
+         {this.renderLogOutButton()}
+        </CardSection>
+       </Card>
+       <View style={{ marginTop: 15 }} />
+       {this.renderPopButton()}
+      </ScrollView>
+      );
+    }
   return (
       <ScrollView style={{ marginTop:50 }}>
        <Card>
@@ -232,7 +262,8 @@ render() {
         onValueChange={() => { this.props.isanonSwitch(this.props.user_uuid, this.props.authtoken); }}
        />
       <TouchableOpacity onPress={() => this.getUserPhotos(this.props.username)} >
-        <Text style={styles.infoTextStyle}>you are posting as<Text style={styles.notanonTextStyle}> {this.props.username}</Text></Text>
+        <Text style={styles.infoTextStyle}>you are posting as
+        <Text style={styles.notanonTextStyle}> {this.props.username}</Text></Text>
       </TouchableOpacity>
       </CardSection>
       <CardSection>
@@ -266,7 +297,7 @@ const styles = {
 notanonTextStyle: {
 fontSize: 18,
 color: 'rgb(0,122,255)',
-marginLeft:4,
+marginLeft: 4,
 
 },
   paddingStyle: {
@@ -297,7 +328,7 @@ return {
   created: state.auth.created,
   isanon: state.auth.isanon,
   logInError: state.auth.logInError,
-
+  banned: state.auth.banned
  };
 };
 

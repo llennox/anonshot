@@ -69,7 +69,7 @@ getUserPhotos(poster) {
 
 handleScroll(event) {
   const l = this.props.photos.objects.length;
-  const v = (this.props.child_viewed + 1);
+  const v = (this.props.child_viewed + 2);
   let br = this.props.bottom_refresh;
   if ((v === l)
   && (l % 8 === 0)
@@ -268,13 +268,13 @@ renderTrashFlag(x) {
   renderBottomSpinner() {
     if (this.props.bottom_refresh) {
       return (
-        <Card>
+        <View style={{ marginTop: 5 }} >
         <Image
-         style={{ width: 256, height: 256, alignSelf: 'center', marginTop: 100 }}
+         style={{ width: 256, height: 256, alignSelf: 'center' }}
          source={require('./assets/ramstine.gif')}
          resizeMode="contain"
         />
-        </Card>
+        </View>
       );
     }
     return;
@@ -367,7 +367,7 @@ renderTrashFlag(x) {
          </View>
        )}
 
-       {this.renderBottomSpinner()}
+        {this.renderBottomSpinner()}
 
       </ScrollView>
     );
