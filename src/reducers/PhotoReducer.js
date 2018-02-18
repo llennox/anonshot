@@ -49,9 +49,8 @@ export default (state = INITIAL_STATE, action) => {
           return { ...state, child_viewed: action.payload };
       case BUCHILD_VIEWED:
           return { ...state, buchild_viewed: action.payload };
-      case LAYOUT:
+      case LAYOUT: {
           const objects = [action.payload];
-          const payload = action.payload;
           if (state.saved_layout.objects !== undefined) {
               const lay = state.saved_layout.objects.concat(objects);
               return { ...state,
@@ -65,6 +64,7 @@ export default (state = INITIAL_STATE, action) => {
               objects
             }
         };
+      }
       case REFRESHING_FALSE:
         return { ...state, refreshing: false };
     case REF_BOTTOM:
@@ -115,19 +115,19 @@ export default (state = INITIAL_STATE, action) => {
         }
 
     case DELETE_PHOTO: {
-      const filtered_photos = state.photos.objects.filter(item => item.uuid !== action.payload);
+      const filteredPhotos = state.photos.objects.filter(item => item.uuid !== action.payload);
       return { ...state,
       photos: {
-        objects: filtered_photos
+        objects: filteredPhotos
       }
       };
     }
 
     case FLAG_PHOTO: {
-      const filtered_photos = state.photos.objects.filter(item => item.uuid !== action.payload);
+      const filteredPhotos = state.photos.objects.filter(item => item.uuid !== action.payload);
       return { ...state,
       photos: {
-        objects: filtered_photos
+        objects: filteredPhotos
       }
       };
     }

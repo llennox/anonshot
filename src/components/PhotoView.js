@@ -15,7 +15,6 @@ import { Text,
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { connect } from 'react-redux';
-import { RNCamera } from 'react-native-camera';
 import { CardSection, Card } from './common';
 import {
   initialView,
@@ -51,12 +50,9 @@ constructor(props) {
       );
       }
     });
-
     if (this.props.once_loaded) {
-      console.log('secondTIme');
       return;
     }
-    console.log('first_only');
     this.props.initialView();
 }
 
@@ -80,7 +76,6 @@ handleScroll(event) {
         this.props.nextPage(this.props.authtoken, p);
   }
   const childViewed = this.props.child_viewed;
-  console.log(childViewed);
   const childViewedBelow = (this.props.child_viewed + 1);
   const h = event.nativeEvent.contentOffset.y;
   const a = this.props.saved_layout.objects;
@@ -104,7 +99,7 @@ calculateHeight(event, i) {
   } else if (lay[childNum] === undefined) {
     this.props.saveLayout(sendArray);
   } else {
-    console.log('dupe');
+    return;
   }
 }
 

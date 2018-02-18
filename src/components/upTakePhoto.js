@@ -24,20 +24,25 @@ const wbOrder = {
 };
 
 class upTakePhoto extends Component {
-  state = {
-    flash: 'off',
-    zoom: 0,
-    autoFocus: 'on',
-    depth: 0,
-    type: 'back',
-    whiteBalance: 'auto',
-    ratio: '16:9',
-    ratios: [],
-    photoId: 1,
-    showGallery: false,
-    photos: [],
-    faces: [],
-  };
+  constructor(props) {
+      super(props);
+      state = {
+        flash: 'off',
+        zoom: 0,
+        autoFocus: 'on',
+        depth: 0,
+        type: 'back',
+        whiteBalance: 'auto',
+        ratio: '16:9',
+        ratios: [],
+        photoId: 1,
+        showGallery: false,
+        photos: [],
+        faces: [],
+      };
+
+      console.log(this.state);
+  }
 
   getRatios = async function() {
     const ratios = await this.camera.getSupportedRatios();

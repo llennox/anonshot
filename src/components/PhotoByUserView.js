@@ -34,7 +34,6 @@ class PhotoByUserView extends Component {
 
   constructor(props) {
     super(props);
-    console.log('photobyuserview')
   }
 
 
@@ -95,7 +94,7 @@ renderTrashFlag(x) {
 
 handleScroll(event) {
   const l = this.props.user_photos.objects.length;
-  const v = (this.props.child_viewed + 1);
+  const v = (this.props.child_viewed + 2);
   let br = this.props.bottom_refresh;
   if ((v === l)
   && (l % 8 === 0)
@@ -104,18 +103,17 @@ handleScroll(event) {
         const p = (l / 8) + 1;
         this.props.nextPageUserPhotos(this.props.authtoken, p);
   }
-  const child_viewed = this.props.child_viewed;
-  console.log(child_viewed);
-  const child_viewed_below = (this.props.child_viewed + 1);
+  const childViewed = this.props.child_viewed;
+  const childViewedBelow = (this.props.child_viewed + 1);
   const h = event.nativeEvent.contentOffset.y;
   const a = this.props.saved_layout.objects;
-  if (a.length !== child_viewed_below && child_viewed >= 0) {
-   if (h >= a[child_viewed_below][child_viewed_below]) {
-      this.props.buchildInView(child_viewed_below);
-  } else if (h <= a[child_viewed][child_viewed] && child_viewed !== 0) {
-      const child_viewed_up = (child_viewed - 1);
-      this.props.buchildInView(child_viewed_up);
-  };
+  if (a.length !== childViewedBelow && childViewed >= 0) {
+   if (h >= a[childViewedBelow][childViewedBelow]) {
+      this.props.buchildInView(childViewedBelow);
+  } else if (h <= a[childViewed][childViewed] && childViewed !== 0) {
+      const childViewedUp = (childViewed - 1);
+      this.props.buchildInView(childViewedUp);
+  }
 }
 }
 
@@ -130,7 +128,7 @@ calculateHeight(event, i) {
     this.props.saveLayout(sendArray);
   } else {
     return;
-  };
+  }
 }
 
   commentButtonPress(aphoto) {
@@ -259,14 +257,13 @@ calculateHeight(event, i) {
     return;
   }
 
-  renderCaption(x, i) {
+  renderCaption(x) {
     return (
       <View>
         <Text style={styles.captionTextStyle} >{x.poster}:</Text>
         <Text style={styles.timeTextStyle} >{x.caption}</Text>
       </View>
   );
-
   }
 
   renderMainView() {
@@ -298,12 +295,13 @@ calculateHeight(event, i) {
                 }
       >
        {mapMe.map((x, i) =>
-         <View key={i} onLayout={(event) => {this.calculateHeight(event, {i})}}>
+         <View key={i} onLayout={(event) => { this.calculateHeight(event, {i}); }} >
          <Card id={x.uuid} key={i} >
-         <View style={{ alignContent: 'flex-start',
+         <View
+         style={{ alignContent: 'flex-start',
 justifyContent: 'space-between',
-   }}>
-{this.renderCaption(x, i)}
+       }}>
+{this.renderCaption(x)}
 {this.renderTrashFlag(x)}
 </View>
          <CardSection>
@@ -351,18 +349,18 @@ const styles = {
 captionTextStyle: {
 fontSize: 18,
 color: 'black',
-marginLeft:4,
+marginLeft: 4,
 
 },
 notanonTextStyle: {
 fontSize: 18,
 color: 'rgb(0,122,255)',
-marginLeft:4,
+marginLeft: 4,
 
 },
 timeTextStyle: {
 fontSize: 14,
-marginLeft:4,
+marginLeft: 4,
 color: 'black',
 
 },
@@ -381,7 +379,7 @@ marginRight: 5
 deleteFlagIcon: {
     alignSelf: 'flex-end',
     marginRight: 10,
-    marginTop:1,
+    marginTop: 1,
     flex: 1
 
 },
@@ -389,7 +387,7 @@ flagTextStyle: {
 fontSize: 12,
 color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
-marginRight:2
+marginRight: 2
 }
 };
 

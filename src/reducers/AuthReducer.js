@@ -64,7 +64,6 @@ export default (state = INITIAL_STATE, action) => {
       case LOADING:
            return { ...state, loading: true, error: '' };
       case LOADING_FALSE:
-              console.log('loading false');
               return { ...state, loading: false, error: '' };
       case SET_AUTH:
            return {
@@ -77,7 +76,7 @@ export default (state = INITIAL_STATE, action) => {
       case UPDATE_ERROR:
             return { ...state, logInError: '', error: action.payload, loading: false };
       case UPDATE_LOGIN_ERROR:
-            return { ...state, password: '', error: '' , logInError: action.payload, loading: false };
+            return { ...state, password: '', error: '', logInError: action.payload, loading: false };
       default:
          return state;
     }

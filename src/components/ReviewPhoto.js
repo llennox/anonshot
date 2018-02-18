@@ -39,7 +39,6 @@ class ReviewPhoto extends Component {
     }
         const token = this.props.authtoken;
         const caption = this.props.caption;
-        console.log(this.props);
         const useruuid = this.props.user_uuid;
         if (this.props.saved_video_location) {
           const media = this.props.saved_video_location;
@@ -172,7 +171,6 @@ class ReviewPhoto extends Component {
 }
 
 render() {
-  console.log(this.props);
  return (
   <ScrollView>
    {this.renderMainView()}
@@ -245,7 +243,6 @@ loadingStyle: {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
 return {
   user_uuid: state.auth.user_uuid,
   single_photo: state.photos.single_photo,

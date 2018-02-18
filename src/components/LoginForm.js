@@ -204,8 +204,6 @@ renderCreateForm() {
  }
 
 render() {
-  console.log(typeof this.props.created);
-  console.log(this.props.created);
   if (this.props.banned) {
     return (
       <ScrollView style={{ marginTop: 50 }}>

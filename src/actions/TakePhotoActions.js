@@ -1,12 +1,10 @@
-import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob'
 import { Actions } from 'react-native-router-flux';
 import { REVIEW_PHOTO,
   REVIEW_VIDEO,
   CAPTION,
   REFRESHING,
-  SET_DEFAULT,
-  LOADING
+  SET_DEFAULT
  } from './types';
 import { getPhotosWithAction } from './PhotoActions';
 
@@ -74,7 +72,6 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
           data: 'false'
         }
         ]).then(() => {
-         console.log('time');
         dispatch({ type: SET_DEFAULT });
         getPhotosWithAction(dispatch, token, 1);
       }).catch((err) => {
@@ -120,8 +117,7 @@ export const PostVideo = (token, uuid, thecaption, themedia) => {
           data: 'True'
         }
       ]).then(() => {
-        console.log('timevideo');
-        dispatch({SET_DEFAULT});
+        dispatch({ type: SET_DEFAULT });
         getPhotosWithAction(dispatch, token, 1);
 
       }).catch((err) => {

@@ -1,10 +1,9 @@
 import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
 import { AsyncStorage } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import { USERNAME_CHANGED,
   PASSWORD_CHANGED,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL,
   LOADING,
   SET_AUTH,
   REFRESHING,
@@ -14,11 +13,8 @@ import { USERNAME_CHANGED,
   UPDATE_ERROR,
   UPDATE_LOGIN_ERROR,
   ONCE_LOADED,
-  LG_USERNAME_CHANGED,
-  LG_PASSWORD_CHANGED,
   BANNED_TRUE
 } from './types';
-import DeviceInfo from 'react-native-device-info';
 import { getPhotosWithAction, getPhotos, grabSinglePhoto } from './PhotoActions';
 
 export const usernameChanged = (text) => {
@@ -42,7 +38,6 @@ export const isanonSwitch = (uuid, token) => {
       user_uuid: uuid
     })
     .then(function (response) {
-      console.log(response.data);
       dispatch({ type: ISANON, payload: response.data });
     })
     .catch(function (error) {
@@ -103,7 +98,6 @@ export const updateError = (message) => {
 export const CreateAccount = (username, email, password, token) => {
     return (dispatch) => {
       dispatch({ type: LOADING });
-      console.log(password);
       axios.defaults.headers.common['Authorization'] = `Token ${token}`;
       //const url = 'https://httpbin.org/post'
       const url = 'https://anonshot.com/api/change-username/';
@@ -113,22 +107,21 @@ export const CreateAccount = (username, email, password, token) => {
         newpassword: password,
         newemail: email
       }).then(function (response) {
-        const token = response.data.token;
-        console.log(response);
+        const mytoken = response.data.token;
         AsyncStorage.setItem('user_uuid', response.data.user_uuid);
         AsyncStorage.setItem('username', response.data.username);
-        AsyncStorage.setItem('authtoken', token);
+        AsyncStorage.setItem('authtoken', mytoken);
         AsyncStorage.setItem('created', response.data.created.toString());
 
         dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
-        getPhotosWithAction(dispatch, token, 1);
+        getPhotosWithAction(dispatch, mytoken, 1);
       })
       .catch(function (error) {
         dispatch({ type: UPDATE_ERROR, payload: 'username or email already taken' });
         console.log(error.message);
       });
     }
-}
+};
 
 
 export const logInUser = (username, password, token) => {
@@ -164,7 +157,6 @@ function consMjolnir(dispatch) {
   axios.post(url, {
     deviceUUID: uniqueID
   }).then(function (response) {
-     console.log(response.data);
      if (response.data === true) {
        dispatch({ type: BANNED_TRUE });
      }
@@ -178,7 +170,7 @@ function consMjolnir(dispatch) {
 function returnUUID() {
   const uniqueID = DeviceInfo.getUniqueID();
   return uniqueID;
-};
+}
 
 export const createUser = (dispatch) => {
   axios.defaults.headers.common['Authorization'] = '';
@@ -211,7 +203,6 @@ export const initialView = () => {
      .then((item) => {
        console.log(item);
      if (item[0][1] != null && item[1][1] != null && item[2][1] != null && item[3][1] != null) {
-       console.log(item);
        dispatch({ type: SET_AUTH, payload: item });
        getPhotos(dispatch, item[0][1], 1);
      } else {
@@ -243,6 +234,5 @@ export const logOutUser = (token) => {
         AsyncStorage.removeItem('created');
         createUser(dispatch);
       });
-
   };
 };

@@ -24,15 +24,13 @@ class TakePhoto extends Component {
         captureTarget: Camera.constants.CaptureTarget.cameraRoll,
         type: Camera.constants.Type.back,
         orientation: Camera.constants.Orientation.auto,
-        flashMode: Camera.constants.FlashMode.auto,
+        flashMode: Camera.constants.FlashMode.off,
       },
       isRecording: false
     };
-    console.log(this.state.camera);
   }
 
    componentWillMount() {
-      console.log(this.state.camera);
       this.props.Reset();
   }
 
@@ -49,12 +47,9 @@ class TakePhoto extends Component {
     if (this.camera) {
       this.camera.capture({
         mode: Camera.constants.CaptureMode.video
-      })
-          .then((path) => this.props.VideoLocation(path))
-          .then(setTimeout(() => {
+      }).then(setTimeout(() => {
       this.stopRecording();
-    }, 10000))
-          .catch(err => console.error(err));
+    }, 10000)).then((path) => this.props.VideoLocation(path)).catch(err => console.error(err));
       this.setState({
         isRecording: true
       });
@@ -75,7 +70,6 @@ class TakePhoto extends Component {
   switchType = () => {
     let newType;
     const { back, front } = Camera.constants.Type;
-    console.log('switch');
     if (this.state.camera.type === back) {
       newType = front;
     } else if (this.state.camera.type === front) {

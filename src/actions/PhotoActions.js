@@ -35,25 +35,20 @@ import {
 export const getPhotos = (dispatch, token, page) => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      console.log(position);
       //const lat = 12.11111111111111;
       //const lon = 12.11111111111111111;
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      console.log(token);
       axios.defaults.headers.common.Authorization = `Token ${token}`;
       const url = `https://anonshot.com/api/photos/${lat}/${lon}/${page}/`;
-      console.log(url);
       axios.get(url)
        .then(function (response) {
-        console.log(response.data);
         dispatch({ type: PHOTOS, payload: response.data, p: page });
         dispatch({ type: LOADING_FALSE });
         dispatch({ type: REFRESHING_FALSE });
      })
    .catch(function (error) {
      console.log(error.message);
-
    });
     },
     (error) => console.log(error.message)
@@ -63,18 +58,15 @@ export const getPhotos = (dispatch, token, page) => {
  export const getPhotosWithAction = (dispatch, token, page) => {
    navigator.geolocation.getCurrentPosition(
      (position) => {
-       console.log(position);
+
        //const lat = 12.11111111111111;
        //const lon = 12.11111111111111111;
        const lat = position.coords.latitude;
        const lon = position.coords.longitude;
-       console.log(token);
        axios.defaults.headers.common.Authorization = `Token ${token}`;
        const url = `https://anonshot.com/api/photos/${lat}/${lon}/${page}/`;
-       console.log(url);
        axios.get(url)
         .then(function (response) {
-         console.log(response.data);
          dispatch({ type: PHOTOS, payload: response.data, p: page });
          dispatch({ type: LOADING_FALSE });
          dispatch({ type: REFRESHING_FALSE });
@@ -82,7 +74,6 @@ export const getPhotos = (dispatch, token, page) => {
       })
     .catch(function (error) {
       console.log(error.message);
-
     });
      },
      (error) => console.log(error.message)
@@ -101,7 +92,6 @@ export const grabSinglePhoto = (dispatch, uuid, token) => {
  const url = `https://anonshot.com/api/${uuid}`;
  axios.get(url)
  .then(function (response) {
-  console.log(response.data);
   const x = { x: response.data };
   dispatch({ type: LOADING_FALSE });
   dispatch({ type: REFRESHING_FALSE });
@@ -129,14 +119,11 @@ console.log(error.message);
 
  export const deletePhoto = (uuid, token) => {
      return (dispatch) => {
-       console.log(uuid);
-       console.log(token);
        axios.defaults.headers.common.Authorization = `Token ${token}`;
        const url = 'https://anonshot.com/api/delete-photo/';
        axios.post(url,
          { uuid: uuid
        }).then(function (response) {
-         console.log(response);
          dispatch({ type: DELETE_PHOTO, payload: uuid });
        }).catch(function (error) {
          console.log(error);
@@ -148,14 +135,10 @@ export const flagPhoto = (photouuid, useruuid, token) => {
   return (dispatch) => {
     axios.defaults.headers.common.Authorization = `Token ${token}`;
      const url = 'https://anonshot.com/api/flag-photo/';
-    //const url = 'https://httpbin.org/post'
-    console.log(photouuid);
-    console.log(useruuid);
     axios.post(url, {
       photoUUID: photouuid,
       userUUID: useruuid
     }).then(function (response) {
-      console.log(response);
       dispatch({ type: FLAG_PHOTO, payload: photouuid });
     }).catch(function () {
         dispatch({ type: FLAG_PHOTO, payload: photouuid });
@@ -173,7 +156,6 @@ export const getPhotosByUser = (poster, token, thepage) => {
         const longitude = position.coords.longitude;
         axios.defaults.headers.common.Authorization = `Token ${token}`;
         const url = 'https://anonshot.com/api/user-photos/';
-        console.log(url);
         axios.post(url,  {
           lat: latitude,
           lon: longitude,
@@ -181,7 +163,6 @@ export const getPhotosByUser = (poster, token, thepage) => {
           page: thepage
         })
          .then(function (response) {
-          console.log(response.data);
           dispatch({ type: USER_PHOTOS, payload: response.data, p: thepage });
           dispatch({ type: LOADING_FALSE });
           dispatch({ type: REFRESHING_FALSE });
@@ -198,10 +179,10 @@ export const getPhotosByUser = (poster, token, thepage) => {
 };
 
 export const popToHome = () => {
-  return (dispatch) => {
+  return () => {
     Actions.popTo('PhotoView');
   };
-}
+};
 
 
 export const childInView = (c) => {
