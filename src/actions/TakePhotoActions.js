@@ -72,7 +72,7 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
           data: 'false'
         }
         ]).then(() => {
-        dispatch({ type: SET_DEFAULT });
+        //dispatch({ type: SET_DEFAULT });
         getPhotosWithAction(dispatch, token, 1);
       }).catch((err) => {
         console.log(err);
@@ -117,9 +117,8 @@ export const PostVideo = (token, uuid, thecaption, themedia) => {
           data: 'True'
         }
       ]).then(() => {
-        dispatch({ type: SET_DEFAULT });
+        //dispatch({ type: SET_DEFAULT });
         getPhotosWithAction(dispatch, token, 1);
-
       }).catch((err) => {
         console.log(err);
       });

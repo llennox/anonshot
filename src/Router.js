@@ -20,7 +20,6 @@ const RouterComponent = () => {
         component={PhotoView}
         title="UmbreCam"
         leftButtonImage={require('./components/assets/photo-camera.png')}
-
         onLeft={() => Actions.Camera()}
         rightButtonImage={require('./components/assets/user-shape.png')}
         onRight={() => Actions.login()}
