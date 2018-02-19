@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scene, Router, Actions, Stack } from 'react-native-router-flux';
+import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import CommentView from './components/CommentView';
 import PhotoView from './components/PhotoView';
