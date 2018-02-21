@@ -43,6 +43,7 @@ export const getPhotos = (dispatch, token, page) => {
       const url = `https://anonshot.com/api/photos/${lat}/${lon}/${page}/`;
       axios.get(url)
        .then(function (response) {
+
         dispatch({ type: PHOTOS, payload: response.data, p: page });
         dispatch({ type: LOADING_FALSE });
         dispatch({ type: REFRESHING_FALSE });
@@ -109,7 +110,7 @@ console.log(error.message);
    axios.post(url, {
      comment: text,
      photouuid: uuid
-   }).then(function () {
+   }).then(function (response) {
      grabSinglePhoto(dispatch, uuid, token);
    }).catch(function (error) {
      console.log(error.message);

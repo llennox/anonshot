@@ -71,8 +71,7 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
           name: 'isvideo',
           data: 'false'
         }
-        ]).then(() => {
-        //dispatch({ type: SET_DEFAULT });
+      ]).then((response) => {
         getPhotosWithAction(dispatch, token, 1);
       }).catch((err) => {
         console.log(err);
