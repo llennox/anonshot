@@ -40,7 +40,7 @@ export const getPhotos = (dispatch, token, page) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
       axios.defaults.headers.common.Authorization = `Token ${token}`;
-      const url = `https://anonshot.com/api/photos/${lat}/${lon}/${page}/`;
+      const url = `https://locallensapp.com/api/photos/${lat}/${lon}/${page}/`;
       axios.get(url)
        .then(function (response) {
 
@@ -65,7 +65,7 @@ export const getPhotos = (dispatch, token, page) => {
        const lat = position.coords.latitude;
        const lon = position.coords.longitude;
        axios.defaults.headers.common.Authorization = `Token ${token}`;
-       const url = `https://anonshot.com/api/photos/${lat}/${lon}/${page}/`;
+       const url = `https://locallensapp.com/api/photos/${lat}/${lon}/${page}/`;
        axios.get(url)
         .then(function (response) {
          dispatch({ type: PHOTOS, payload: response.data, p: page });
@@ -90,7 +90,7 @@ export const getPhotos = (dispatch, token, page) => {
 
 export const grabSinglePhoto = (dispatch, uuid, token) => {
   axios.defaults.headers.common.Authorization = `Token ${token}`;
- const url = `https://anonshot.com/api/${uuid}`;
+ const url = `https://locallensapp.com/api/${uuid}`;
  axios.get(url)
  .then(function (response) {
   const x = { x: response.data };
@@ -106,7 +106,7 @@ console.log(error.message);
  export const PostComment = (text, token, uuid) => {
    return (dispatch) => {
      axios.defaults.headers.common.Authorization = `Token ${token}`;
-   const url = 'https://anonshot.com/api/comments/';
+   const url = 'https://locallensapp.com/api/comments/';
    axios.post(url, {
      comment: text,
      photouuid: uuid
@@ -121,7 +121,7 @@ console.log(error.message);
  export const deletePhoto = (uuid, token) => {
      return (dispatch) => {
        axios.defaults.headers.common.Authorization = `Token ${token}`;
-       const url = 'https://anonshot.com/api/delete-photo/';
+       const url = 'https://locallensapp.com/api/delete-photo/';
        axios.post(url,
          { uuid: uuid
        }).then(function (response) {
@@ -135,7 +135,7 @@ console.log(error.message);
 export const flagPhoto = (photouuid, useruuid, token) => {
   return (dispatch) => {
     axios.defaults.headers.common.Authorization = `Token ${token}`;
-     const url = 'https://anonshot.com/api/flag-photo/';
+     const url = 'https://locallensapp.com/api/flag-photo/';
     axios.post(url, {
       photoUUID: photouuid,
       userUUID: useruuid
@@ -156,7 +156,7 @@ export const getPhotosByUser = (poster, token, thepage) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         axios.defaults.headers.common.Authorization = `Token ${token}`;
-        const url = 'https://anonshot.com/api/user-photos/';
+        const url = 'https://locallensapp.com/api/user-photos/';
         axios.post(url,  {
           lat: latitude,
           lon: longitude,

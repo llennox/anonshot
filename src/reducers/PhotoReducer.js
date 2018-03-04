@@ -134,6 +134,7 @@ export default (state = INITIAL_STATE, action) => {
      case COMMENT:
        return { ...state, comment: action.payload };
      case SINGLE_PHOTO:
+     console.log(action.payload);
        return { ...state, single_photo: action.payload, comment: '' };
      case POST_COMMENT:
        return { ...state, single_photo: state.single_photo.x.comments.concat(action.payload) };

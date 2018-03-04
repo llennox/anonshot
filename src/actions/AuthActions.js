@@ -34,7 +34,7 @@ export const lgusernameChanged = (text) => {
 export const isanonSwitch = (uuid, token) => {
   return (dispatch) => {
     axios.defaults.headers.common['Authorization'] = `Token ${token}`;
-    axios.post('https://anonshot.com/api/isanonSwitch/', {
+    axios.post('https://locallensapp.com/api/isanonSwitch/', {
       user_uuid: uuid
     })
     .then(function (response) {
@@ -100,7 +100,7 @@ export const CreateAccount = (username, email, password, token) => {
       dispatch({ type: LOADING });
       axios.defaults.headers.common['Authorization'] = `Token ${token}`;
       //const url = 'https://httpbin.org/post'
-      const url = 'https://anonshot.com/api/change-username/';
+      const url = 'https://locallensapp.com/api/change-username/';
       axios.post(url, {
         isanon: 'False',
         newusername: username,
@@ -128,7 +128,7 @@ export const logInUser = (username, password, token) => {
   return (dispatch) => {
     dispatch({ type: LOADING });
     axios.defaults.headers.common['Authorization'] = `Token ${token}`;
-    const url = 'https://anonshot.com/api/login/';
+    const url = 'https://locallensapp.com/api/login/';
     //const url = 'https://httpbin.org/post';
     axios.post(url, {
       username: username,
@@ -152,7 +152,7 @@ export const logInUser = (username, password, token) => {
 
 function consMjolnir(dispatch) {
   const uniqueID = DeviceInfo.getUniqueID();
-  const url = 'https://anonshot.com/api/ban-check/';
+  const url = 'https://locallensapp.com/api/ban-check/';
   //const url = 'https://httpbin.org/post'
   axios.post(url, {
     deviceUUID: uniqueID
@@ -174,7 +174,7 @@ function returnUUID() {
 
 export const createUser = (dispatch) => {
   axios.defaults.headers.common['Authorization'] = '';
-  const url = 'https://anonshot.com/api/create-user/';
+  const url = 'https://locallensapp.com/api/create-user/';
   //const url = 'https://httpbin.org/post'
   let deviceUUID = returnUUID();
   axios.post(url, {
@@ -219,7 +219,7 @@ export const logOutUser = (token) => {
   return (dispatch) => {
       dispatch({ type: LOADING });
       axios.defaults.headers.common['Authorization'] = `Token ${token}`;
-      const url = 'https://anonshot.com/api/auth/logout/';
+      const url = 'https://locallensapp.com/api/auth/logout/';
       //const url = 'https://httpbin.org/post'
       axios.post(url).then(function () {
         AsyncStorage.removeItem('user_uuid');

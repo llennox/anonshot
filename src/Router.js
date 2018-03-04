@@ -18,7 +18,7 @@ const RouterComponent = () => {
         style={{ paddingTop: 5 }}
         key='PhotoView'
         component={PhotoView}
-        title="UmbreCam"
+        title="Local Lens"
         leftButtonImage={require('./components/assets/photo-camera.png')}
         onLeft={() => Actions.Camera()}
         rightButtonImage={require('./components/assets/user-shape.png')}
@@ -42,14 +42,14 @@ const RouterComponent = () => {
        <Scene
         key='login'
         component={LoginForm}
-        title="UmbreCam"
+        title="Local Lens"
         renderBackButton={() => (null)}
        />
        <Scene
         style={{ paddingTop: 5 }}
         key='PhotoByUserView'
         component={PhotoByUserView}
-        title="UmbreCam"
+        title="Local Lens"
         leftButtonImage={require('./components/assets/photo-camera.png')}
         showIcon={true}
         onLeft={() => Actions.Camera()}
@@ -60,7 +60,7 @@ const RouterComponent = () => {
         style={{ paddingTop: 25 }}
         key='CommentView'
         component={CommentView}
-        title="UmbreCam"
+        title="Local lens"
        />
     </Scene>
   </Router>

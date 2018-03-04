@@ -18,9 +18,9 @@ export const USER_PHOTOS = 'user_photos';
 export const ONCE_LOADED_FALSE = 'once_loaded_false';
 export const BANNED_TRUE = 'banned_true';
 export const FLAG_PHOTO = 'flag_photo';
+export const REF_TEXT = 'ref_text';
 
-
-export const DELETE_PHOTO = 'delete_photo'
+export const DELETE_PHOTO = 'delete_photo';
 export const PHOTOS = 'photos';
 export const COMMENT = 'comment';
 export const POST_COMMENT = 'post_comment';

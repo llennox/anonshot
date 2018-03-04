@@ -41,7 +41,7 @@ constructor(props) {
         return (
           Alert.alert(
         'Rules',
-        '1. you agree to not post anything that violates United States Law by using this app \n 2. If you are under 18 you will immediately exit this application without pressing I agree. \n 3. you will not post photos of anyone without their consent ',
+        '1. you agree to not post anything that violates United States Law by using this app \n 2. If you are under 18 you will immediately exit this application without pressing I agree. \n 3. you will not post photos of anyone without their consent \n 4. by pressing I agree you are agreeing to the full terms found at locallensapp.com/terms',
         [
           { text: 'I agree', onPress: () => console.log('I agree'), style: 'cancel' },
         ],
@@ -73,15 +73,13 @@ handleScroll(event) {
   && (br === false)) {
         br = true;
         const p = (l / 8) + 1;
-        console.log('refresh');
         this.props.nextPage(this.props.authtoken, p);
   }
+
   const childViewed = this.props.child_viewed;
   const childViewedBelow = (this.props.child_viewed + 1);
   const h = event.nativeEvent.contentOffset.y;
-  console.log(h);
   const a = this.props.saved_layout.objects;
-  console.log(a);
   if (a.length !== childViewedBelow && childViewed >= 0) {
    if (h >= a[childViewedBelow][childViewedBelow]) {
       this.props.childInView(childViewedBelow);
@@ -95,7 +93,6 @@ handleScroll(event) {
 calculateHeight(event, i) {
   const childNum = i.i;
   const sendArray = {};
-  console.log(i.i);
   sendArray[childNum] = (event.nativeEvent.layout.y - 200);
   const lay = this.props.saved_layout.objects;
   if (lay === undefined) {
@@ -103,7 +100,7 @@ calculateHeight(event, i) {
   } else if (lay[childNum] === undefined) {
     this.props.saveLayout(sendArray);
   } else {
-    console.log('dupe');
+    return;
   }
 }
 
@@ -180,7 +177,7 @@ renderTrashFlag(x) {
          style={{ width: deviceWidth,
            height: deviceHeight / 1.4,
             alignSelf: 'center' }}
-         source={{ uri: `https://anonshot.com/photos/${x.uuid}.mp4` }}
+         source={{ uri: `https://locallensapp.com/photos/${x.uuid}.mp4` }}
          ref={(ref) => {
              this.player = ref;
            }}                                      // Store reference
@@ -222,7 +219,7 @@ renderTrashFlag(x) {
          style={{ width: deviceWidth,
            height: deviceHeight / 1.4,
          alignSelf: 'center' }}
-         source={{ uri: `https://anonshot.com/photos/${x.uuid}.mp4` }}
+         source={{ uri: `https://locallensapp.com/photos/${x.uuid}.mp4` }}
          ref={(ref) => {
              this.player = ref;
            }}                                      // Store reference
@@ -259,7 +256,7 @@ renderTrashFlag(x) {
        style={{ width: deviceWidth,
          height: deviceHeight / 1.4,
         alignSelf: 'center' }}
-       source={{ uri: `https://anonshot.com/photos/${x.uuid}.jpg`,
+       source={{ uri: `https://locallensapp.com/photos/${x.uuid}.jpg`,
                priority: FastImage.priority.normal, }}
       />
     );

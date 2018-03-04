@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Text,
-  TouchableOpacity,
   Dimensions,
   Image,
   View,
@@ -126,14 +125,20 @@ class ReviewPhoto extends Component {
   renderMainView() {
     if (this.props.refreshing) {
     return (
-      <CardSection >
+      <View
+        style={{
+          flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '30%'
+    }}>
       <Image
        style={{ width: 256, height: 256, alignSelf: 'center' }}
        source={require('./assets/ramstine.gif')}
        resizeMode="contain"
       />
-
-     </CardSection>
+    <Text style={styles.errorTextStyle}>{this.props.refText}</Text>
+  </View>
     );
   }
    return (
@@ -256,7 +261,8 @@ return {
   refreshing: state.photos.refreshing,
   muted: state.photos.muted,
   paused: state.photos.paused,
-  banned: state.auth.banned
+  banned: state.auth.banned,
+  refText: state.savedphoto.refText
  };
 };
 

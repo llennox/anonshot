@@ -4,7 +4,8 @@ import { REVIEW_PHOTO,
   REVIEW_VIDEO,
   CAPTION,
   REFRESHING,
-  SET_DEFAULT
+  SET_DEFAULT,
+  REF_TEXT
  } from './types';
 import { getPhotosWithAction } from './PhotoActions';
 
@@ -40,12 +41,13 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
 
   return (dispatch) => {
    dispatch({ type: REFRESHING });
+   dispatch({ type: REF_TEXT, payload: 'uploading photo' });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latt = position.coords.latitude;
         const lonn = position.coords.longitude;
 
-    RNFetchBlob.fetch('POST', 'https://anonshot.com/api/photos/', {
+    RNFetchBlob.fetch('POST', 'https://locallensapp.com/api/photos/', {
         Authorization: 'Token ' + token,
         'Content-Type': 'multipart/form-data'
       }, [
@@ -71,10 +73,12 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
           name: 'isvideo',
           data: 'false'
         }
-      ]).then((response) => {
+      ]).then(() => {
+        dispatch({ type: REF_TEXT, payload: 'getting photos' });
         getPhotosWithAction(dispatch, token, 1);
-      }).catch((err) => {
-        console.log(err);
+      }).catch(() => {
+        dispatch({ type: REF_TEXT, payload: 'upload failed, returning photos' });
+        getPhotosWithAction(dispatch, token, 1);
       });
     },
     (error) => console.log(error.message)
@@ -85,12 +89,13 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
 export const PostVideo = (token, uuid, thecaption, themedia) => {
   return (dispatch) => {
   dispatch({ type: REFRESHING });
+  dispatch({ type: REF_TEXT, payload: 'uploading video' });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latt = position.coords.latitude;
         const lonn = position.coords.longitude;
 
-    RNFetchBlob.fetch('POST', 'https://anonshot.com/api/photos/', {
+    RNFetchBlob.fetch('POST', 'https://locallensapp.com/api/photos/', {
         Authorization: 'Token ' + token
         }, [
         { name: 'file',
@@ -117,9 +122,11 @@ export const PostVideo = (token, uuid, thecaption, themedia) => {
         }
       ]).then(() => {
         //dispatch({ type: SET_DEFAULT });
+        dispatch({ type: REF_TEXT, payload: 'getting photos' });
         getPhotosWithAction(dispatch, token, 1);
-      }).catch((err) => {
-        console.log(err);
+      }).catch(() => {
+        dispatch({ type: REF_TEXT, payload: 'upload failed, returning photos' });
+        getPhotosWithAction(dispatch, token, 1);
       });
     },
     (error) => console.log(error.message)

@@ -157,7 +157,7 @@ calculateHeight(event, i) {
          style={{ width: deviceWidth,
            height: deviceHeight / 1.4,
             alignSelf: 'center' }}
-         source={{ uri: `https://anonshot.com/photos/${x.uuid}.mp4` }}
+         source={{ uri: `https://locallensapp.com/photos/${x.uuid}.mp4` }}
          ref={(ref) => {
              this.player = ref;
            }}                                      // Store reference
@@ -199,7 +199,7 @@ calculateHeight(event, i) {
          style={{ width: deviceWidth,
            height: deviceHeight / 1.4,
          alignSelf: 'center' }}
-         source={{ uri: `https://anonshot.com/photos/${x.uuid}.mp4` }}
+         source={{ uri: `https://locallensapp.com/photos/${x.uuid}.mp4` }}
          ref={(ref) => {
              this.player = ref;
            }}                                      // Store reference
@@ -236,7 +236,7 @@ calculateHeight(event, i) {
        style={{ width: deviceWidth,
          height: deviceHeight / 1.4,
         alignSelf: 'center' }}
-       source={{ uri: `https://anonshot.com/photos/${x.uuid}.jpg`,
+       source={{ uri: `https://locallensapp.com/photos/${x.uuid}.jpg`,
                priority: FastImage.priority.normal, }}
       />
     );
