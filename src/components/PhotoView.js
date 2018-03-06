@@ -43,17 +43,14 @@ constructor(props) {
         'Rules',
         '1. you agree to not post anything that violates United States Law by using this app \n 2. If you are under 18 you will immediately exit this application without pressing I agree. \n 3. you will not post photos of anyone without their consent \n 4. by pressing I agree you are agreeing to the full terms found at locallensapp.com/terms',
         [
-          { text: 'I agree', onPress: () => console.log('I agree'), style: 'cancel' },
+          { text: 'I agree', onPress: () => this.props.initialView(), style: 'cancel' },
         ],
         { cancelable: false }
       )
       );
-      }
-    });
-    if (this.props.once_loaded) {
-      return;
     }
     this.props.initialView();
+    });
 }
 
 componentDidMount() {

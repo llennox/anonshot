@@ -316,7 +316,7 @@ justifyContent: 'space-between',
          onPress={() => this.commentButtonPress({ x })}
          style={styles.buttonStyle}
          >
-           <Text style={styles.timeTextStyle}>
+           <Text style={styles.notanonTextStyle}>
            View all {x.comments.length} Comment(s)/ Post comment
            </Text>
          </TouchableOpacity>
