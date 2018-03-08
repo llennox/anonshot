@@ -139,8 +139,6 @@ blockAlert(x) {
 );
 }
 
-
-
 trashAlert(x) {
   return (
     Alert.alert(

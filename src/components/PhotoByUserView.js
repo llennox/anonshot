@@ -84,28 +84,6 @@ trashAlert(x) {
 );
 }
 
-renderTrashFlag(x) {
-    if (x.useruuid === this.props.user_uuid) {
-      return (
-        <TouchableOpacity
-        onPress={() => this.trashAlert(x)}
-        >
-        <Image style={styles.deleteFlagIcon}
-         source={require('./assets/trash.png')}
-        />
-        </TouchableOpacity>
-      );
-    }
-  return (
-    <TouchableOpacity
-    onPress={() => this.flagAlert(x)}
-    >
-    <Text style={styles.flagTextStyle}>flag post</Text>
-
-    </TouchableOpacity>
-  )
-}
-
 handleScroll(event) {
   const l = this.props.user_photos.objects.length;
   const v = (this.props.child_viewed + 2);
@@ -151,6 +129,28 @@ calculateHeight(event, i) {
 
   refreshList() {
         this.props.setRefreshing(true, this.props.authtoken);
+}
+
+renderTrashFlag(x) {
+    if (x.useruuid === this.props.user_uuid) {
+      return (
+        <TouchableOpacity
+        onPress={() => this.trashAlert(x)}
+        >
+        <Image style={styles.deleteFlagIcon}
+         source={require('./assets/trash.png')}
+        />
+        </TouchableOpacity>
+      );
+    }
+  return (
+    <TouchableOpacity
+    onPress={() => this.flagAlert(x)}
+    >
+    <Text style={styles.flagTextStyle}>flag post</Text>
+
+    </TouchableOpacity>
+  );
 }
 
   renderVideoPhoto(x, i) {

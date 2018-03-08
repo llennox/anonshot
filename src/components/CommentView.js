@@ -167,7 +167,6 @@ renderComment(items) {
       onPress={() => this.blockAlert(items.useruuid)}
       >
        <Text style={styles.flagTextStyle}>block user</Text>
-
       </TouchableOpacity>
      </View>
 
