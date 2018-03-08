@@ -13,7 +13,9 @@ import { USERNAME_CHANGED,
   UPDATE_ERROR,
   UPDATE_LOGIN_ERROR,
   ONCE_LOADED,
-  BANNED_TRUE
+  BANNED_TRUE,
+  BLOCKUSER,
+  FLAG_PHOTO
 } from './types';
 import { getPhotosWithAction, getPhotos, grabSinglePhoto } from './PhotoActions';
 
@@ -44,6 +46,53 @@ export const isanonSwitch = (uuid, token) => {
       console.log(error);
     });
   };
+};
+
+export const blockUserComment = (useruuid, token) => {
+  return (dispatch) => {
+    axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+    axios.post('https://locallensapp.com/api/blockUser/', {
+      user_uuid: useruuid
+    })
+    .then(function () {
+      dispatch({ type: BLOCKUSER, payload: useruuid });
+    })
+    .catch(function () {
+      dispatch({ type: BLOCKUSER, payload: useruuid });
+    });
+  };
+};
+
+export const blockUserViewPhoto = (photouuid, useruuid, token) => {
+  return (dispatch) => {
+  axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+  axios.post('https://locallensapp.com/api/blockUser/', {
+    user_uuid: useruuid,
+    photo_uuid: photouuid
+  })
+  .then(function () {
+    getPhotosWithAction(dispatch, token, 1);
+  })
+  .catch(function () {
+    getPhotosWithAction(dispatch, token, 1);
+  });
+};
+};
+
+export const blockUserPhoto = (photouuid, useruuid, token) => {
+  return (dispatch) => {
+  axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+  axios.post('https://locallensapp.com/api/blockUser/', {
+    user_uuid: useruuid,
+    photo_uuid: photouuid
+  })
+  .then(function () {
+    getPhotos(dispatch, token, 1);
+  })
+  .catch(function () {
+    getPhotos(dispatch, token, 1);
+  });
+};
 };
 
 export const setRefreshingSingle = (bool, uuid, token) => {

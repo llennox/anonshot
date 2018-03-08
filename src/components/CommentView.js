@@ -22,7 +22,9 @@ import {
   ChangeComment,
   switchMute,
   deletePhoto,
-setRefreshingSingle
+setRefreshingSingle,
+blockUserComment,
+blockUserPhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -50,6 +52,34 @@ flagAlert(x) {
   [
     { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
     { text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
+blockPhotoAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to block this user?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+  { text: 'Yes', onPress: () => this.props.blockUserViewPhoto(x.uuid, x.useruuid, this.props.authtoken) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
+blockAlert(useruuid) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to block this user?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.blockUserComment(useruuid, this.props.authtoken) },
   ],
   { cancelable: false }
 )
@@ -117,6 +147,12 @@ renderComment(items) {
         <Text style={styles.timeTextStyle}>
         <Moment element={Text} fromNow>{items.timestamp}</Moment>
         </Text>
+        <TouchableOpacity
+        onPress={() => this.blockAlert(items.useruuid)}
+        >
+         <Text style={styles.flagTextStyle}>block user</Text>
+
+        </TouchableOpacity>
      </View>
 
     );
@@ -127,6 +163,12 @@ renderComment(items) {
       <Text style={styles.timeTextStyle}>
       <Moment element={Text} fromNow>{items.timestamp}</Moment>
       </Text>
+      <TouchableOpacity
+      onPress={() => this.blockAlert(items.useruuid)}
+      >
+       <Text style={styles.flagTextStyle}>block user</Text>
+
+      </TouchableOpacity>
      </View>
 
   );
@@ -136,6 +178,11 @@ renderCaption(x) {
   if (x.poster !== 'anon') {
     return (
       <View>
+        <TouchableOpacity
+        onPress={() => this.blockPhotoAlert(x)}
+        >
+        <Text style={styles.blockTextStyle}>block user</Text>
+        </TouchableOpacity>
       <TouchableOpacity
         onPress={() => this.getUserPhotos(x.poster)}
       >
@@ -147,6 +194,11 @@ renderCaption(x) {
   }
    return (
      <View>
+       <TouchableOpacity
+       onPress={() => this.blockPhotoAlert(x)}
+       >
+       <Text style={styles.blockTextStyle}>block user</Text>
+       </TouchableOpacity>
        <Text style={styles.captionTextStyle} >{x.poster}:</Text>
        <Text style={styles.timeTextStyle} >{x.caption}</Text>
      </View>
@@ -233,6 +285,7 @@ renderCaption(x) {
         <Text style={styles.timeTextStyle}>
         <Moment element={Text} fromNow>{x.timestamp}</Moment>
         </Text>
+        <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
         <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
         </CardSection>
         {x.comments.map((items) =>
@@ -309,6 +362,12 @@ color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
 marginRight: 2
 },
+blockTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-start',
+marginRight: 2
+}
 };
 
 const mapStateToProps = state => {
@@ -332,5 +391,7 @@ export default connect(mapStateToProps, {
   ChangeComment,
   switchMute,
   setRefreshingSingle,
-  deletePhoto
+  deletePhoto,
+  blockUserComment,
+  blockUserPhoto
 })(CommentView);

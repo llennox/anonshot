@@ -48,7 +48,7 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
         const lonn = position.coords.longitude;
 
     RNFetchBlob.fetch('POST', 'https://locallensapp.com/api/photos/', {
-        Authorization: 'Token ' + token,
+        Authorization: `Token ${token}`,
         'Content-Type': 'multipart/form-data'
       }, [
         { name: 'file',
@@ -96,7 +96,7 @@ export const PostVideo = (token, uuid, thecaption, themedia) => {
         const lonn = position.coords.longitude;
 
     RNFetchBlob.fetch('POST', 'https://locallensapp.com/api/photos/', {
-        Authorization: 'Token ' + token
+        Authorization: `Token ${token}`
         }, [
         { name: 'file',
         filename: 'placeholder.mp4',

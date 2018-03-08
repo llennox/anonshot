@@ -26,7 +26,8 @@ import {
   saveLayout,
   deletePhoto,
   flagPhoto,
-  getPhotosByUser
+  getPhotosByUser,
+  blockUserPhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -123,6 +124,21 @@ flagAlert(x) {
 )
 );
 }
+
+blockAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to block this user?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+  { text: 'Yes', onPress: () => this.props.blockUserPhoto(x.uuid, x.useruuid, this.props.authtoken) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
 
 
 trashAlert(x) {
@@ -278,6 +294,11 @@ renderTrashFlag(x) {
    if (x.poster !== 'anon') {
      return (
        <View>
+         <TouchableOpacity
+         onPress={() => this.blockAlert(x)}
+         >
+         <Text style={styles.blockTextStyle}>block user</Text>
+         </TouchableOpacity>
        <TouchableOpacity
          onPress={() => this.getUserPhotos(x.poster)}
        >
@@ -290,6 +311,11 @@ renderTrashFlag(x) {
 
     return (
       <View>
+        <TouchableOpacity
+        onPress={() => this.blockAlert(x)}
+        >
+        <Text style={styles.blockTextStyle}>block user</Text>
+        </TouchableOpacity>
         <Text style={styles.captionTextStyle} >{x.poster}:</Text>
         <Text style={styles.timeTextStyle} >{x.caption}</Text>
       </View>
@@ -345,6 +371,7 @@ renderTrashFlag(x) {
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
+         <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
          <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
          </CardSection>
          <CardSection>
@@ -398,6 +425,12 @@ flagTextStyle: {
 fontSize: 12,
 color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
+marginRight: 2
+},
+blockTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-start',
 marginRight: 2
 },
 
@@ -455,5 +488,6 @@ export default connect(mapStateToProps, {
   saveLayout,
   deletePhoto,
   flagPhoto,
-  getPhotosByUser
+  getPhotosByUser,
+  blockUserPhoto
 })(PhotoView);

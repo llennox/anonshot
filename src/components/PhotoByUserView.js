@@ -24,7 +24,8 @@ import { initialView,
   saveLayout,
   deletePhoto,
   flagPhoto,
-  getPhotosByUser
+  getPhotosByUser,
+  blockUserViewPhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -32,13 +33,12 @@ const deviceHeight = Dimensions.get('window').height;
 
 class PhotoByUserView extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
-
 componentDidMount() {
   this.props.setRefreshing(false, this.props.authtoken, 0, 0);
+}
+
+getUserPhotos(poster) {
+    this.props.getPhotosByUser(poster, this.props.authtoken);
 }
 
 flagAlert(x) {
@@ -49,6 +49,20 @@ flagAlert(x) {
   [
     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
     {text: 'Yes', onPress: () => this.props.flagPhoto(x.uuid, x.useruuid, this.props.authtoken)},
+  ],
+  { cancelable: false }
+)
+);
+}
+
+blockAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to block this user?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+  { text: 'Yes', onPress: () => this.props.blockUserViewPhoto(x.uuid, x.useruuid, this.props.authtoken) },
   ],
   { cancelable: false }
 )
@@ -134,11 +148,6 @@ calculateHeight(event, i) {
   commentButtonPress(aphoto) {
       this.props.RenderComments(aphoto);
   }
-
-  getUserPhotos(poster) {
-      this.props.getPhotosByUser(poster, this.props.authtoken);
-  }
-
 
   refreshList() {
         this.props.setRefreshing(true, this.props.authtoken);
@@ -260,6 +269,11 @@ calculateHeight(event, i) {
   renderCaption(x) {
     return (
       <View>
+        <TouchableOpacity
+        onPress={() => this.blockAlert(x)}
+        >
+        <Text style={styles.blockTextStyle}>block user</Text>
+        </TouchableOpacity>
         <Text style={styles.captionTextStyle} >{x.poster}:</Text>
         <Text style={styles.timeTextStyle} >{x.caption}</Text>
       </View>
@@ -309,7 +323,7 @@ justifyContent: 'space-between',
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
-         <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
+         <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
          </CardSection>
          <CardSection>
          <TouchableOpacity
@@ -388,6 +402,12 @@ fontSize: 12,
 color: 'rgb(0,122,255)',
 alignSelf: 'flex-end',
 marginRight: 2
+},
+blockTextStyle: {
+fontSize: 12,
+color: 'rgb(0,122,255)',
+alignSelf: 'flex-start',
+marginRight: 2
 }
 };
 
@@ -417,5 +437,6 @@ export default connect(mapStateToProps, {
   saveLayout,
   deletePhoto,
   flagPhoto,
-  getPhotosByUser
+  getPhotosByUser,
+  blockUserViewPhoto
 })(PhotoByUserView);

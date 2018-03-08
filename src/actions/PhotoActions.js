@@ -41,6 +41,8 @@ export const getPhotos = (dispatch, token, page) => {
       const lon = position.coords.longitude;
       axios.defaults.headers.common.Authorization = `Token ${token}`;
       const url = `https://locallensapp.com/api/photos/${lat}/${lon}/${page}/`;
+      console.log(url);
+      console.log(token);
       axios.get(url)
        .then(function (response) {
 

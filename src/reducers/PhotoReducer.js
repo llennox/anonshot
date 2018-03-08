@@ -15,7 +15,8 @@ import {
   USER_PHOTOS,
   BUCHILD_VIEWED,
   BUREF_BOTTOM,
-  FLAG_PHOTO
+  FLAG_PHOTO,
+  BLOCKUSER
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -134,8 +135,25 @@ export default (state = INITIAL_STATE, action) => {
      case COMMENT:
        return { ...state, comment: action.payload };
      case SINGLE_PHOTO:
-     console.log(action.payload);
        return { ...state, single_photo: action.payload, comment: '' };
+    case BLOCKUSER: {
+      console.log(action.payload);
+      console.log(state.single_photo);
+      const singlePhotoComments = state.single_photo.x.comments;
+      console.log(singlePhotoComments);
+const filteredComment =
+ state.single_photo.x.comments.filter(item => item.useruuid !== action.payload);
+       console.log(filteredComment);
+       return { ...state,
+         single_photo: {
+          ...state.single_photo,
+          x: {
+            ...state.single_photo.x,
+            comments: filteredComment
+          }
+         }
+       };
+     }
      case POST_COMMENT:
        return { ...state, single_photo: state.single_photo.x.comments.concat(action.payload) };
     default:
