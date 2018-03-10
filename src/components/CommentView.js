@@ -24,7 +24,7 @@ import {
   deletePhoto,
 setRefreshingSingle,
 blockUserComment,
-blockUserPhoto
+blockUserViewPhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -284,7 +284,7 @@ renderCaption(x) {
         <Text style={styles.timeTextStyle}>
         <Moment element={Text} fromNow>{x.timestamp}</Moment>
         </Text>
-        <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
+        <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
         <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
         </CardSection>
         {x.comments.map((items) =>
@@ -392,5 +392,5 @@ export default connect(mapStateToProps, {
   setRefreshingSingle,
   deletePhoto,
   blockUserComment,
-  blockUserPhoto
+  blockUserViewPhoto
 })(CommentView);

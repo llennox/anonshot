@@ -154,7 +154,7 @@ class ReviewPhoto extends Component {
         autoCorrect={true}
         multiline={true}
         style={styles.inputStyle}
-        placeholder='caption'
+        placeholder='description'
         onChangeText={this.onCaptionChange.bind(this)}
         value={this.props.caption}
         />

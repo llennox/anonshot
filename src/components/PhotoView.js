@@ -369,7 +369,7 @@ renderTrashFlag(x) {
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
-         <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
+         <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
          <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
          </CardSection>
          <CardSection>

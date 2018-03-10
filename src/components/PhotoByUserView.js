@@ -309,7 +309,7 @@ renderTrashFlag(x) {
                 }
       >
        {mapMe.map((x, i) =>
-         <View key={i} onLayout={(event) => { this.calculateHeight(event, {i}); }} >
+         <View key={i} onLayout={(event) => { this.calculateHeight(event, { i }); }} >
          <Card id={x.uuid} key={i} >
          <View
          style={{ alignContent: 'flex-start',
@@ -323,7 +323,7 @@ justifyContent: 'space-between',
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
-         <Text style={styles.timeTextStyle} >lat,lon: {x.lat}, {x.lon}</Text>
+         <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
          </CardSection>
          <CardSection>
          <TouchableOpacity

@@ -54,10 +54,10 @@ export const blockUserComment = (useruuid, token) => {
     axios.post('https://locallensapp.com/api/blockUser/', {
       user_uuid: useruuid
     })
-    .then(function () {
+    .then(function (response) {
       dispatch({ type: BLOCKUSER, payload: useruuid });
     })
-    .catch(function () {
+    .catch(function (error) {
       dispatch({ type: BLOCKUSER, payload: useruuid });
     });
   };
@@ -70,10 +70,12 @@ export const blockUserViewPhoto = (photouuid, useruuid, token) => {
     user_uuid: useruuid,
     photo_uuid: photouuid
   })
-  .then(function () {
+  .then(function (response) {
+    dispatch({ type: FLAG_PHOTO, payload: photouuid });
     getPhotosWithAction(dispatch, token, 1);
   })
-  .catch(function () {
+  .catch(function (error) {
+    dispatch({ type: FLAG_PHOTO, payload: photouuid });
     getPhotosWithAction(dispatch, token, 1);
   });
 };
@@ -86,10 +88,12 @@ export const blockUserPhoto = (photouuid, useruuid, token) => {
     user_uuid: useruuid,
     photo_uuid: photouuid
   })
-  .then(function () {
+  .then(function (response) {
+    dispatch({ type: FLAG_PHOTO, payload: photouuid });
     getPhotos(dispatch, token, 1);
   })
-  .catch(function () {
+  .catch(function (error) {
+    dispatch({ type: FLAG_PHOTO, payload: photouuid });
     getPhotos(dispatch, token, 1);
   });
 };
