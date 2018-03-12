@@ -2,7 +2,6 @@
     package="com.anonshot"
     android:versionCode="13"
     android:versionName="1.0.1">
-
    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -23,6 +22,9 @@
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
+      <meta-data
+       android:name="com.google.android.geo.API_KEY"
+       android:value="AIzaSyA8adRSX1vGXOuopWmjTv0XB5yQGwgRUQ8"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
