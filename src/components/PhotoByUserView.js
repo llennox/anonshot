@@ -25,7 +25,8 @@ import { initialView,
   deletePhoto,
   flagPhoto,
   getPhotosByUser,
-  blockUserViewPhoto
+  blockUserViewPhoto,
+  theMapViewAction
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -37,9 +38,14 @@ componentDidMount() {
   this.props.setRefreshing(false, this.props.authtoken, 0, 0);
 }
 
+onMapView(x) {
+   this.props.theMapViewAction(x);
+}
+
 getUserPhotos(poster) {
     this.props.getPhotosByUser(poster, this.props.authtoken);
 }
+
 
 flagAlert(x) {
   return (
@@ -323,7 +329,11 @@ justifyContent: 'space-between',
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
-         <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
+         <TouchableOpacity
+         onPress={() => this.onMapView({ x })}
+         >
+         <Text style={styles.notanonTextStyle} >{x.lat}, {x.lon}</Text>
+         </TouchableOpacity>
          </CardSection>
          <CardSection>
          <TouchableOpacity
@@ -438,5 +448,6 @@ export default connect(mapStateToProps, {
   deletePhoto,
   flagPhoto,
   getPhotosByUser,
-  blockUserViewPhoto
+  blockUserViewPhoto,
+  theMapViewAction
 })(PhotoByUserView);

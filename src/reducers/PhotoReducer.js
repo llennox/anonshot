@@ -137,7 +137,6 @@ export default (state = INITIAL_STATE, action) => {
      case SINGLE_PHOTO:
        return { ...state, single_photo: action.payload, comment: '' };
     case BLOCKUSER: {
-      const singlePhotoComments = state.single_photo.x.comments;
 const filteredComment =
  state.single_photo.x.comments.filter(item => item.useruuid !== action.payload);
        return { ...state,

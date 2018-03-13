@@ -24,7 +24,8 @@ import {
   deletePhoto,
 setRefreshingSingle,
 blockUserComment,
-blockUserViewPhoto
+blockUserViewPhoto,
+theMapViewAction
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -34,6 +35,10 @@ class CommentView extends Component {
 
   onCommentChange(text) {
      this.props.ChangeComment(text);
+  }
+
+  onMapView(x) {
+     this.props.theMapViewAction(x);
   }
 
 getUserPhotos(poster) {
@@ -284,7 +289,11 @@ renderCaption(x) {
         <Text style={styles.timeTextStyle}>
         <Moment element={Text} fromNow>{x.timestamp}</Moment>
         </Text>
-        <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
+        <TouchableOpacity
+        onPress={() => this.onMapView({ x })}
+        >
+        <Text style={styles.notanonTextStyle} >{x.lat}, {x.lon}</Text>
+        </TouchableOpacity>
         <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
         </CardSection>
         {x.comments.map((items) =>
@@ -392,5 +401,6 @@ export default connect(mapStateToProps, {
   setRefreshingSingle,
   deletePhoto,
   blockUserComment,
-  blockUserViewPhoto
+  blockUserViewPhoto,
+  theMapViewAction
 })(CommentView);

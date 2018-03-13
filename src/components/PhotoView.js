@@ -27,7 +27,8 @@ import {
   deletePhoto,
   flagPhoto,
   getPhotosByUser,
-  blockUserPhoto
+  blockUserPhoto,
+  theMapViewAction
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -57,6 +58,11 @@ constructor(props) {
 componentDidMount() {
   this.props.setRefreshing(false, this.props.authtoken, 0, 0);
 }
+
+onMapView(x) {
+   this.props.theMapViewAction(x);
+}
+
 
 getUserPhotos(poster) {
     this.props.getPhotosByUser(poster, this.props.authtoken, 1);
@@ -369,7 +375,12 @@ renderTrashFlag(x) {
          <Text style={styles.timeTextStyle}>
          <Moment element={Text} fromNow>{x.timestamp}</Moment>
          </Text>
-         <Text style={styles.timeTextStyle} >{x.lat}, {x.lon}</Text>
+         <TouchableOpacity
+         onPress={() => this.onMapView({ x })}
+         >
+         <Text style={styles.notanonTextStyle} >{x.lat}, {x.lon}</Text>
+         </TouchableOpacity>
+
          <Text style={styles.timeTextStyle} >{x.photo_distance} km from you</Text>
          </CardSection>
          <CardSection>
@@ -487,5 +498,6 @@ export default connect(mapStateToProps, {
   deletePhoto,
   flagPhoto,
   getPhotosByUser,
-  blockUserPhoto
+  blockUserPhoto,
+  theMapViewAction
 })(PhotoView);

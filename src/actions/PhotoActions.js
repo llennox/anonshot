@@ -32,6 +32,13 @@ import {
     };
  };
 
+ export const theMapViewAction = (singlePhoto) => {
+   return (dispatch) => {
+     dispatch({ type: SINGLE_PHOTO, payload: singlePhoto });
+    Actions.theMapView();
+  };
+ };
+
 export const getPhotos = (dispatch, token, page) => {
   navigator.geolocation.getCurrentPosition(
     (position) => {

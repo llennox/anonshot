@@ -6,6 +6,7 @@ import PhotoView from './components/PhotoView';
 import ReviewPhoto from './components/ReviewPhoto';
 import TakePhoto from './components/TakePhoto';
 import PhotoByUserView from './components/PhotoByUserView';
+import theMapView from './components/theMapView';
 
 
 const RouterComponent = () => {
@@ -14,7 +15,6 @@ const RouterComponent = () => {
   <Router titleStyle={styles.navbar} >
     <Scene key='root'>
        <Scene
-
         style={{ paddingTop: 5 }}
         key='PhotoView'
         component={PhotoView}
@@ -60,6 +60,12 @@ const RouterComponent = () => {
         style={{ paddingTop: 25 }}
         key='CommentView'
         component={CommentView}
+        title="Local lens"
+       />
+       <Scene
+        style={{ paddingTop: 25 }}
+        key='theMapView'
+        component={theMapView}
         title="Local lens"
        />
     </Scene>

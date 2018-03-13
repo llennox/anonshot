@@ -101,7 +101,7 @@ android {
         applicationId "com.anonshot"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 13
+        versionCode 14
         versionName "1.0.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
