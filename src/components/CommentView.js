@@ -25,7 +25,8 @@ import {
 setRefreshingSingle,
 blockUserComment,
 blockUserViewPhoto,
-theMapViewAction
+theMapViewAction,
+savePhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -77,6 +78,20 @@ blockPhotoAlert(x) {
 );
 }
 
+downloadAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to save this photo?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.savePhoto(x.uuid) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
 blockAlert(useruuid) {
   return (
     Alert.alert(
@@ -119,22 +134,27 @@ postComment() {
 renderTrashFlag(x) {
     if (x.useruuid === this.props.user_uuid) {
       return (
+        <View style={{ alignContent: 'flex-end', flex: 1, flexDirection: 'row-reverse' }}>
+          <View style={{ marginRight: 5 }} />
+        <TouchableOpacity
+        onPress={() => this.downloadAlert(x)}
+        >
+        <Text style={styles.flagTextStyle}>download</Text>
+        </TouchableOpacity>
+        <View style={{ marginRight: 5 }} />
         <TouchableOpacity
         onPress={() => this.trashAlert(x)}
         >
-        <Image
-        style={styles.deleteFlagIcon}
-         source={require('./assets/trash.png')}
-        />
+          <Text style={styles.flagTextStyle}>delete</Text>
         </TouchableOpacity>
+        </View>
       );
     }
   return (
     <TouchableOpacity
     onPress={() => this.flagAlert(x)}
     >
-     <Text style={styles.flagTextStyle}>flag post</Text>
-
+    <Text style={styles.flagTextStyle}>flag post</Text>
     </TouchableOpacity>
   );
 }
@@ -402,5 +422,6 @@ export default connect(mapStateToProps, {
   deletePhoto,
   blockUserComment,
   blockUserViewPhoto,
-  theMapViewAction
+  theMapViewAction,
+  savePhoto
 })(CommentView);

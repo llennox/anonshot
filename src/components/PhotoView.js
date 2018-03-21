@@ -179,19 +179,18 @@ trashAlert(x) {
 renderTrashFlag(x) {
     if (x.useruuid === this.props.user_uuid) {
       return (
-        <View>
+        <View style={{ alignContent: 'flex-end', flex: 1, flexDirection: 'row-reverse' }}>
+          <View style={{ marginRight: 5 }} />
         <TouchableOpacity
         onPress={() => this.downloadAlert(x)}
         >
         <Text style={styles.flagTextStyle}>download</Text>
         </TouchableOpacity>
+        <View style={{ marginRight: 5 }} />
         <TouchableOpacity
         onPress={() => this.trashAlert(x)}
         >
-        <Image
-        style={styles.deleteFlagIcon}
-         source={require('./assets/trash.png')}
-        />
+          <Text style={styles.flagTextStyle}>delete</Text>
         </TouchableOpacity>
         </View>
       );
