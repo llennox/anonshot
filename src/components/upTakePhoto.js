@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { connect } from 'react-redux';
 import { PhotoLocation, VideoLocation, Reset } from '../actions';
@@ -44,11 +44,11 @@ class upTakePhoto extends Component {
     return ratios;
   };
 
-  toggleView() {
+  /*toggleView() {
     this.setState({
       showGallery: !this.state.showGallery,
     });
-  }
+  }*/
 
   toggleFacing() {
     this.setState({
@@ -100,87 +100,26 @@ class upTakePhoto extends Component {
 
   takePicture = async function() {
     if (this.camera) {
-      this.camera.takePictureAsync().then(data => {
-        console.log('data: ', data);
+      this.camera.takePictureAsync({ width: 1125, quality: 0.3 }).then(data => {
+        this.props.PhotoLocation(data);
       });
     }
   };
 
-  onFacesDetected = ({ faces }) => this.setState({ faces });
-  onFaceDetectionError = state => console.warn('Faces detection error:', state);
-
-  renderFace({ bounds, faceID, rollAngle, yawAngle }) {
-    return (
-      <View
-        key={faceID}
-        transform={[
-          { perspective: 600 },
-          { rotateZ: `${rollAngle.toFixed(0)}deg` },
-          { rotateY: `${yawAngle.toFixed(0)}deg` },
-        ]}
-        style={[
-          styles.face,
-          {
-            ...bounds.size,
-            left: bounds.origin.x,
-            top: bounds.origin.y,
-          },
-        ]}
-      >
-        <Text style={styles.faceText}>ID: {faceID}</Text>
-        <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>
-        <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>
-      </View>
-    );
+  takeRecording = async function() {
+  if (this.camera) {
+    this.camera.recordAsync({ maxDuration: 10
+    }).then((data) => this.props.VideoLocation(data.uri)).catch(err => console.error(err));
   }
+}
 
-  renderLandmarksOfFace(face) {
-    const renderLandmark = position =>
-      position && (
-        <View
-          style={[
-            styles.landmark,
-            {
-              left: position.x - landmarkSize / 2,
-              top: position.y - landmarkSize / 2,
-            },
-          ]}
-        />
-      );
-    return (
-      <View key={`landmarks-${face.faceID}`}>
-        {renderLandmark(face.leftEyePosition)}
-        {renderLandmark(face.rightEyePosition)}
-        {renderLandmark(face.leftEarPosition)}
-        {renderLandmark(face.rightEarPosition)}
-        {renderLandmark(face.leftCheekPosition)}
-        {renderLandmark(face.rightCheekPosition)}
-        {renderLandmark(face.leftMouthPosition)}
-        {renderLandmark(face.mouthPosition)}
-        {renderLandmark(face.rightMouthPosition)}
-        {renderLandmark(face.noseBasePosition)}
-        {renderLandmark(face.bottomMouthPosition)}
-      </View>
-    );
+quitRecording = () => {
+  if (this.camera) {
+    this.camera.stopRecording();
   }
+}
 
-  renderFaces() {
-    return (
-      <View style={styles.facesContainer} pointerEvents="none">
-        {this.state.faces.map(this.renderFace)}
-      </View>
-    );
-  }
-
-  renderLandmarks() {
-    return (
-      <View style={styles.facesContainer} pointerEvents="none">
-        {this.state.faces.map(this.renderLandmarksOfFace)}
-      </View>
-    );
-  }
-
-  renderCamera() {
+  renderCamera () {
     return (
       <RNCamera
         ref={ref => {
@@ -195,9 +134,6 @@ class upTakePhoto extends Component {
         zoom={this.state.zoom}
         whiteBalance={this.state.whiteBalance}
         ratio={this.state.ratio}
-        faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
-        onFacesDetected={this.onFacesDetected}
-        onFaceDetectionError={this.onFaceDetectionError}
         focusDepth={this.state.depth}
         permissionDialogTitle={'Permission to use camera'}
         permissionDialogMessage={'We need your permission to use your camera phone'}
@@ -210,15 +146,6 @@ class upTakePhoto extends Component {
             justifyContent: 'space-around',
           }}
         >
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-            <Text style={styles.flipText}> FLIP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleWB.bind(this)}>
-            <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
-          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -228,54 +155,42 @@ class upTakePhoto extends Component {
             alignSelf: 'flex-end',
           }}
         >
-          <Slider
-            style={{ width: 150, marginTop: 15, alignSelf: 'flex-end' }}
-            onValueChange={this.setFocusDepth.bind(this)}
-            step={0.1}
-            disabled={this.state.autoFocus === 'on'}
-          />
+
         </View>
         <View
           style={{
             flex: 0.1,
             backgroundColor: 'transparent',
             flexDirection: 'row',
-            alignSelf: 'flex-end',
+            alignSelf: 'center',
           }}
         >
           <TouchableOpacity
-            style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
+            style={[styles.flipButton, { flex: 0.1, alignSelf: 'center' }]}
             onPress={this.zoomIn.bind(this)}
           >
             <Text style={styles.flipText}> + </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
+            style={[styles.flipButton, { flex: 0.1, alignSelf: 'center' }]}
             onPress={this.zoomOut.bind(this)}
           >
             <Text style={styles.flipText}> - </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
-            style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-            onPress={this.toggleFocus.bind(this)}
-          >
-            <Text style={styles.flipText}> AF : {this.state.autoFocus} </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'center' }]}
             onPress={this.takePicture.bind(this)}
           >
             <Text style={styles.flipText}> SNAP </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-            onPress={this.toggleView.bind(this)}
-          >
-            <Text style={styles.flipText}> Gallery </Text>
+          <TouchableOpacity style={[styles.flipButton, {alignSelf:'center'}]} onPress={this.toggleFacing.bind(this)}>
+            <Text style={styles.flipText}> FLIP </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.flipButton, {alignSelf:'center'}]} onPress={this.toggleFlash.bind(this)}>
+            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
           </TouchableOpacity>
         </View>
-        {this.renderFaces()}
-        {this.renderLandmarks()}
       </RNCamera>
     );
   }
@@ -314,7 +229,7 @@ const styles = StyleSheet.create({
   },
   flipText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 12,
   },
   item: {
     margin: 4,
@@ -328,7 +243,7 @@ const styles = StyleSheet.create({
   picButton: {
     backgroundColor: 'darkseagreen',
   },
-  galleryButton: {
+  vidButton: {
     backgroundColor: 'indianred',
   },
   facesContainer: {

@@ -15,7 +15,9 @@ import { USERNAME_CHANGED,
   ONCE_LOADED,
   BANNED_TRUE,
   BLOCKUSER,
-  FLAG_PHOTO
+  FLAG_PHOTO,
+  NETWORK_ERROR,
+  LOADING_FALSE
 } from './types';
 import { getPhotosWithAction, getPhotos, grabSinglePhoto } from './PhotoActions';
 
@@ -165,11 +167,12 @@ export const CreateAccount = (username, email, password, token) => {
         AsyncStorage.setItem('username', response.data.username);
         AsyncStorage.setItem('authtoken', mytoken);
         AsyncStorage.setItem('created', response.data.created.toString());
-
+        dispatch({ type: LOADING_FALSE });
         dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
         getPhotosWithAction(dispatch, mytoken, 1);
       })
       .catch(function (error) {
+        dispatch({ type: LOADING_FALSE });
         dispatch({ type: UPDATE_ERROR, payload: 'username or email already taken' });
         console.log(error.message);
       });
@@ -194,10 +197,12 @@ export const logInUser = (username, password, token) => {
       AsyncStorage.setItem('authtoken', response.data.token);
       AsyncStorage.setItem('created', response.data.created.toString());
       dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
+      dispatch({ type: LOADING_FALSE });
       getPhotosWithAction(dispatch, token, 1);
     })
     .catch(function (error) {
       console.log(error);
+      dispatch({ type: LOADING_FALSE });
       dispatch({ type: UPDATE_LOGIN_ERROR, payload: 'username or password incorrect' });
     });
   };
@@ -212,10 +217,11 @@ function consMjolnir(dispatch) {
   }).then(function (response) {
      if (response.data === true) {
        dispatch({ type: BANNED_TRUE });
+       dispatch({ type: NETWORK_ERROR, paload: false });
      }
      return;
   }).catch(function (error) {
-    console.log(error);
+    dispatch({ type: NETWORK_ERROR, paload: true });
     return error;
   });
 }
@@ -239,6 +245,7 @@ export const createUser = (dispatch) => {
     AsyncStorage.setItem('username', response.data.username);
     AsyncStorage.setItem('authtoken', token);
     AsyncStorage.setItem('created', response.data.created.toString());
+    dispatch({ type: LOADING_FALSE });
     dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data });
     getPhotosWithAction(dispatch, token, 1);
   }).catch(function (error) {
@@ -285,6 +292,7 @@ export const logOutUser = (token) => {
         AsyncStorage.removeItem('username');
         AsyncStorage.removeItem('authtoken');
         AsyncStorage.removeItem('created');
+        dispatch({ type: LOADING_FALSE });
         createUser(dispatch);
       });
   };

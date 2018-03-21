@@ -4,7 +4,7 @@ import LoginForm from './components/LoginForm';
 import CommentView from './components/CommentView';
 import PhotoView from './components/PhotoView';
 import ReviewPhoto from './components/ReviewPhoto';
-import TakePhoto from './components/TakePhoto';
+import upTakePhoto from './components/upTakePhoto';
 import PhotoByUserView from './components/PhotoByUserView';
 import theMapView from './components/theMapView';
 
@@ -27,7 +27,7 @@ const RouterComponent = () => {
        />
        <Scene
         onLeft={() => Actions.photoView()}
-        component={TakePhoto}
+        component={upTakePhoto}
         key='Camera'
         navigationBarStyle={{ backgroundColor: 'transparent',
         borderBottomColor: 'transparent' }}

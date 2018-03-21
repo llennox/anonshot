@@ -6,7 +6,9 @@ import {
   View,
   ScrollView,
   TextInput,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert,
+  CameraRoll
 } from 'react-native';
 import Video from 'react-native-video';
 import { connect } from 'react-redux';
@@ -49,6 +51,32 @@ class ReviewPhoto extends Component {
         }
   }
 
+  savePhoto() {
+    CameraRoll.saveToCameraRoll(this.props.saved_photo_location).then(() => {
+      return (
+        Alert.alert(
+      '',
+      'your photo has been saved to your device',
+      [
+        { text: 'Great!', onPress: () => console.log('photo saved') },
+      ],
+      { cancelable: false }
+    )
+    );
+  }).catch(() => {
+    return (
+      Alert.alert(
+    '',
+    'something went wrong :/',
+    [
+      { text: 'sorry!', onPress: () => console.log('photo save fail') },
+    ],
+    { cancelable: false }
+  )
+  );
+});
+  }
+
   renderPopButton() {
     return (
       <CardSection>
@@ -57,6 +85,20 @@ class ReviewPhoto extends Component {
        onPress={this.onPopButton.bind(this)}
       >
         <Text style={styles.notanonTextStyle}>Cancel</Text>
+      </Button>
+      </CardSection>
+    );
+  }
+
+
+  renderSaveButton() {
+    return (
+      <CardSection>
+      <Button
+      style={styles.errorTextStyle}
+       onPress={() => this.savePhoto()}
+      >
+        <Text style={styles.notanonTextStyle}>Save Photo</Text>
       </Button>
       </CardSection>
     );
@@ -88,7 +130,7 @@ class ReviewPhoto extends Component {
      style={{ width: deviceWidth,
        height: deviceHeight / 1.4,
        alignSelf: 'center',
-     marginTop:40 }}
+     marginTop: 40 }}
      source={{ uri: loc }}
      ref={(ref) => {
          this.player = ref;
@@ -169,6 +211,9 @@ class ReviewPhoto extends Component {
           Post Photo/Video
           </Text>
         </Button>
+
+  <View style={{ marginTop: 5 }} />
+        {this.renderSaveButton()}
     <View style={{ marginTop: 5 }} />
         {this.renderPopButton()}
     </View>
@@ -255,8 +300,8 @@ return {
   photos: state.photos.photos,
   authtoken: state.auth.authtoken,
   comment: state.photos.comment,
-  saved_photo_location: state.savedphoto.review_photo.path,
-  saved_video_location: state.savedphoto.review_video.path,
+  saved_photo_location: state.savedphoto.review_photo.uri,
+  saved_video_location: state.savedphoto.review_video.uri,
   caption: state.savedphoto.caption,
   refreshing: state.photos.refreshing,
   muted: state.photos.muted,

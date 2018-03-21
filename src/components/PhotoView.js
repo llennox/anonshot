@@ -28,7 +28,8 @@ import {
   flagPhoto,
   getPhotosByUser,
   blockUserPhoto,
-  theMapViewAction
+  theMapViewAction,
+  savePhoto
 } from '../actions';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -131,6 +132,21 @@ flagAlert(x) {
 );
 }
 
+
+downloadAlert(x) {
+  return (
+    Alert.alert(
+  '',
+  'would you like to save this photo?',
+  [
+    { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+    { text: 'Yes', onPress: () => this.props.savePhoto(x.uuid) },
+  ],
+  { cancelable: false }
+)
+);
+}
+
 blockAlert(x) {
   return (
     Alert.alert(
@@ -159,9 +175,16 @@ trashAlert(x) {
 );
 }
 
+
 renderTrashFlag(x) {
     if (x.useruuid === this.props.user_uuid) {
       return (
+        <View>
+        <TouchableOpacity
+        onPress={() => this.downloadAlert(x)}
+        >
+        <Text style={styles.flagTextStyle}>download</Text>
+        </TouchableOpacity>
         <TouchableOpacity
         onPress={() => this.trashAlert(x)}
         >
@@ -170,6 +193,7 @@ renderTrashFlag(x) {
          source={require('./assets/trash.png')}
         />
         </TouchableOpacity>
+        </View>
       );
     }
   return (
@@ -327,6 +351,20 @@ renderTrashFlag(x) {
   }
 
   renderMainView() {
+    if (this.props.network_error) {
+      console.log(this.props.network_error);
+      return (
+        <CardSection>
+        <Text style={styles.infoTextStyle}>There was a network error,
+        make sure you're connected to the internet</Text>
+        <Image
+         style={{ width: 256, height: 256, alignSelf: 'center' }}
+         source={require('./assets/ramstine.gif')}
+         resizeMode="contain"
+        />
+      </CardSection>
+    );
+    }
     if (this.props.loading) {
     return (
       <Card style={{ paddingTop: 40 }}>
@@ -483,7 +521,8 @@ return {
   bottom_refresh: state.photos.bottom_refresh,
   saved_layout: state.photos.saved_layout,
   once_loaded: state.auth.once_loaded,
-  banned: state.auth.banned
+  banned: state.auth.banned,
+  network_error: state.auth.network_error
  };
 };
 
@@ -499,5 +538,6 @@ export default connect(mapStateToProps, {
   flagPhoto,
   getPhotosByUser,
   blockUserPhoto,
-  theMapViewAction
+  theMapViewAction,
+  savePhoto
 })(PhotoView);

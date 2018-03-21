@@ -15,7 +15,8 @@ import {
   DELETE_PHOTO,
   FLAG_PHOTO,
   USER_PHOTOS,
-  ONCE_LOADED_FALSE
+  ONCE_LOADED_FALSE,
+  NETWORK_ERROR
  } from './types';
 
  export const nextPage = (token, page) => {
@@ -52,23 +53,24 @@ export const getPhotos = (dispatch, token, page) => {
       console.log(token);
       axios.get(url)
        .then(function (response) {
-
+        dispatch({ type: NETWORK_ERROR, paload: false });
         dispatch({ type: PHOTOS, payload: response.data, p: page });
         dispatch({ type: LOADING_FALSE });
         dispatch({ type: REFRESHING_FALSE });
      })
    .catch(function (error) {
+     dispatch({ type: LOADING_FALSE });
+     dispatch({ type: NETWORK_ERROR, payload: true });
      console.log(error.message);
    });
     },
-    (error) => console.log(error.message)
+    () => getNewestPhotos(dispatch, page, token)
   );
  };
 
  export const getPhotosWithAction = (dispatch, token, page) => {
    navigator.geolocation.getCurrentPosition(
      (position) => {
-
        //const lat = 12.11111111111111;
        //const lon = 12.11111111111111111;
        const lat = position.coords.latitude;
@@ -78,17 +80,61 @@ export const getPhotos = (dispatch, token, page) => {
        axios.get(url)
         .then(function (response) {
          dispatch({ type: PHOTOS, payload: response.data, p: page });
+         dispatch({ type: NETWORK_ERROR, paload: false });
          dispatch({ type: LOADING_FALSE });
          dispatch({ type: REFRESHING_FALSE });
          Actions.popTo('PhotoView');
       })
     .catch(function (error) {
+      dispatch({ type: LOADING_FALSE });
+      dispatch({ type: NETWORK_ERROR, paload: true });
+      Actions.popTo('PhotoView');
       console.log(error.message);
     });
      },
-     (error) => console.log(error.message)
+     () => getNewestPhotosWithAction(dispatch, page, token)
    );
   };
+
+export const getNewestPhotos = (dispatch, thepage, token) => {
+  axios.defaults.headers.common.Authorization = `Token ${token}`;
+  const url = 'https://locallensapp.com/api/photos-by-newest/';
+  axios.post(url, {
+    page: thepage
+  })
+   .then(function (response) {
+    dispatch({ type: NETWORK_ERROR, paload: false });
+    dispatch({ type: PHOTOS, payload: response.data, p: thepage });
+    dispatch({ type: LOADING_FALSE });
+    dispatch({ type: REFRESHING_FALSE });
+ })
+.catch(function (error) {
+ dispatch({ type: LOADING_FALSE });
+ dispatch({ type: NETWORK_ERROR, payload: true });
+ console.log(error.message);
+});
+};
+
+export const getNewestPhotosWithAction = (dispatch, thepage, token) => {
+  axios.defaults.headers.common.Authorization = `Token ${token}`;
+  const url = 'https://locallensapp.com/api/photos-by-newest/';
+  axios.post(url, {
+    page: thepage
+  })
+   .then(function (response) {
+    dispatch({ type: NETWORK_ERROR, paload: false });
+    dispatch({ type: PHOTOS, payload: response.data, p: thepage });
+    dispatch({ type: LOADING_FALSE });
+    dispatch({ type: REFRESHING_FALSE });
+    Actions.popTo('PhotoView');
+ })
+.catch(function (error) {
+ dispatch({ type: LOADING_FALSE });
+ dispatch({ type: NETWORK_ERROR, payload: true });
+ Actions.popTo('PhotoView');
+ console.log(error.message);
+});
+};
 
  export const RenderComments = (singlePhoto) => {
        return (dispatch) => {
@@ -103,11 +149,14 @@ export const grabSinglePhoto = (dispatch, uuid, token) => {
  axios.get(url)
  .then(function (response) {
   const x = { x: response.data };
+  dispatch({ type: NETWORK_ERROR, paload: false });
   dispatch({ type: LOADING_FALSE });
   dispatch({ type: REFRESHING_FALSE });
   dispatch({ type: SINGLE_PHOTO, payload: x });
 })
 .catch(function (error) {
+dispatch({ type: NETWORK_ERROR, paload: true });
+dispatch({ type: LOADING_FALSE });
 console.log(error.message);
 });
 };
@@ -158,17 +207,9 @@ export const flagPhoto = (photouuid, useruuid, token) => {
 
 export const getPhotosByUser = (poster, token, thepage) => {
   return (dispatch) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        //const lat = 12.11111111111111;
-        //const lon = 12.11111111111111111;
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
         axios.defaults.headers.common.Authorization = `Token ${token}`;
         const url = 'https://locallensapp.com/api/user-photos/';
-        axios.post(url,  {
-          lat: latitude,
-          lon: longitude,
+        axios.post(url, {
           username: poster,
           page: thepage
         })
@@ -180,13 +221,13 @@ export const getPhotosByUser = (poster, token, thepage) => {
           Actions.PhotoByUserView();
        })
      .catch(function (error) {
+       dispatch({ type: LOADING_FALSE });
+       dispatch({ type: REFRESHING_FALSE });
        console.log(error.message);
      });
-      },
-      (error) => console.log(error.message)
-    );
   };
 };
+
 
 export const popToHome = () => {
   return () => {

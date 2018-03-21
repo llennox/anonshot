@@ -20,6 +20,7 @@ export const BANNED_TRUE = 'banned_true';
 export const FLAG_PHOTO = 'flag_photo';
 export const REF_TEXT = 'ref_text';
 export const BLOCKUSER = 'blockuser';
+export const NETWORK_ERROR = 'network_error';
 
 export const DELETE_PHOTO = 'delete_photo';
 export const PHOTOS = 'photos';

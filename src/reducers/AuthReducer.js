@@ -13,7 +13,8 @@ import { USERNAME_CHANGED,
   LG_USERNAME_CHANGED,
   LG_PASSWORD_CHANGED,
   ONCE_LOADED_FALSE,
-  BANNED_TRUE
+  BANNED_TRUE,
+  NETWORK_ERROR
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -29,7 +30,8 @@ username: '',
  photos: {},
  logInError: '',
  once_loaded: false,
- banned: false
+ banned: false,
+ network_error: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -38,6 +40,10 @@ export default (state = INITIAL_STATE, action) => {
          return { ...state, isanon: action.payload };
       case BANNED_TRUE:
          return { ...state, banned: true };
+      case NETWORK_ERROR:
+        if (action.payload) {
+          return { ...state, network_error: true };
+        } return { ...state, network_error: false };
       case ONCE_LOADED:
          return { ...state, once_loaded: true };
       case ONCE_LOADED_FALSE:

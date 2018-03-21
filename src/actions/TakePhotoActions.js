@@ -1,5 +1,6 @@
 import RNFetchBlob from 'react-native-fetch-blob'
 import { Actions } from 'react-native-router-flux';
+import { CameraRoll } from 'react-native';
 import { REVIEW_PHOTO,
   REVIEW_VIDEO,
   CAPTION,
@@ -17,6 +18,23 @@ export const ChangeCaption = (text) => {
     };
 };
 
+export const savePhoto = (photoUUID) => {
+  return () => {
+  const url = `https://locallensapp.com/photos/${photoUUID}.jpg`;
+  console.log(url);
+  RNFetchBlob
+ .config({
+   fileCache: true,
+   appendExt: 'jpg'
+ })
+ .fetch('GET', url, {
+ })
+ .then((res) => {
+   CameraRoll.saveToCameraRoll(res.path()).then((resps) => { console.log(resps); });
+ });
+};
+};
+
 export const Reset = () => {
    return (dispatch) => {
   dispatch({ type: SET_DEFAULT });
@@ -25,8 +43,8 @@ export const Reset = () => {
 
 export const PhotoLocation = (Loc) => {
   return (dispatch) => {
-  dispatch({ type: REVIEW_PHOTO, payload: Loc });
-  Actions.ReviewPhoto();
+      dispatch({ type: REVIEW_PHOTO, payload: Loc });
+      Actions.ReviewPhoto();
 };
 };
 
@@ -77,14 +95,53 @@ export const PostPhoto = (token, uuid, thecaption, themedia) => {
         dispatch({ type: REF_TEXT, payload: 'getting photos' });
         getPhotosWithAction(dispatch, token, 1);
       }).catch(() => {
-        dispatch({ type: REF_TEXT, payload: 'upload failed, returning photos' });
+        dispatch({ type: REF_TEXT, payload: 'upload failed, network error' });
         getPhotosWithAction(dispatch, token, 1);
       });
     },
-    (error) => console.log(error.message)
+    () => sendPhotoNoLoc(token, uuid, thecaption, themedia, dispatch)
   );
   };
 };
+
+function sendPhotoNoLoc(token, uuid, thecaption, themedia, dispatch) {
+  const latt = 0.31514;
+  const lonn = 0.31514;
+
+RNFetchBlob.fetch('POST', 'https://locallensapp.com/api/photos/', {
+  Authorization: `Token ${token}`,
+  'Content-Type': 'multipart/form-data'
+}, [
+  { name: 'file',
+  filename: 'placeholder.jpg',
+  type: 'image/jpg',
+  data: RNFetchBlob.wrap(themedia) },
+  {
+    name: 'lat',
+    data: JSON.stringify(
+    latt
+  ) },
+  {
+    name: 'lon',
+    data: JSON.stringify(
+    lonn
+  ) },
+  {
+    name: 'caption',
+    data: thecaption
+  },
+  {
+    name: 'isvideo',
+    data: 'false'
+  }
+]).then(() => {
+  dispatch({ type: REF_TEXT, payload: 'getting photos' });
+  getPhotosWithAction(dispatch, token, 1);
+}).catch(() => {
+  dispatch({ type: REF_TEXT, payload: 'upload failed, network error' });
+  getPhotosWithAction(dispatch, token, 1);
+});
+}
 
 export const PostVideo = (token, uuid, thecaption, themedia) => {
   return (dispatch) => {
@@ -125,11 +182,11 @@ export const PostVideo = (token, uuid, thecaption, themedia) => {
         dispatch({ type: REF_TEXT, payload: 'getting photos' });
         getPhotosWithAction(dispatch, token, 1);
       }).catch(() => {
-        dispatch({ type: REF_TEXT, payload: 'upload failed, returning photos' });
+        dispatch({ type: REF_TEXT, payload: 'upload failed, network error' });
         getPhotosWithAction(dispatch, token, 1);
       });
     },
-    (error) => console.log(error.message)
+    () => getPhotosWithAction(dispatch, token, 1)
   );
   };
 };
